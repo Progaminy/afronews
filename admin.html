@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AfroNews — Administração</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+<header class="topbar">
+  <div class="bar">
+    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>AfroNews</span></a>
+  </div>
+</header>
+
+<main>
+  <section id="authView" class="login-wrap">
+    <div class="login-card">
+      <span class="brand-mark">A</span>
+      <h1>Administração</h1>
+      <p>Área reservada. Entre com uma conta autorizada do AfroNews.</p>
+
+      <form id="loginForm">
+        <label class="field">
+          <span>E-mail</span>
+          <input id="loginEmail" type="email" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>Palavra-passe</span>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <button id="loginButton" class="primary-btn" type="submit">Entrar</button>
+      </form>
+
+      <div id="accessDenied" class="access-denied" hidden>
+        Esta conta não tem permissão de administrador do AfroNews.
+      </div>
+    </div>
+  </section>
+
+  <section id="adminView" class="admin-shell" hidden>
+    <div class="admin-top">
+      <div class="admin-title">
+        <p class="eyebrow">Painel editorial privado</p>
+        <h1>Admin AfroNews</h1>
+        <div class="admin-status"><span class="status-dot"></span><span id="adminIdentity">Administrador autenticado</span></div>
+      </div>
+      <div>
+        <a class="secondary-btn" href="index.html" style="text-decoration:none;color:#111">Ver portal</a>
+        <button id="logoutButton" class="danger-btn" type="button">Sair</button>
+      </div>
+    </div>
+
+    <div class="admin-layout">
+      <form id="postForm" class="panel" novalidate>
+        <div class="panel-head">
+          <span class="panel-num">01</span>
+          <div>
+            <h2>Nova publicação</h2>
+            <p>Título e texto são obrigatórios.</p>
+          </div>
+        </div>
+
+        <div class="fields">
+          <label class="field wide">
+            <span>Título <b>*</b></span>
+            <input id="postTitle" maxlength="180" placeholder="Título da notícia" required>
+          </label>
+
+          <label class="field wide">
+            <span>Categoria <b>*</b></span>
+            <select id="postCategory" required>
+              <option value="">Selecionar categoria</option>
+              <option>África</option>
+              <option>Europa</option>
+              <option>América</option>
+              <option>Rússia</option>
+              <option>Ásia</option>
+              <option>Oceania</option>
+            </select>
+          </label>
+
+          <label class="field wide">
+            <span>Texto <b>*</b></span>
+            <textarea id="postBody" rows="11" placeholder="Escreva o conteúdo completo da notícia..." required></textarea>
+          </label>
+
+          <div class="field wide">
+            <span>Imagens do dispositivo <small>— máximo 3</small></span>
+            <label class="upload-box">
+              <input id="deviceImages" type="file" accept="image/*" multiple>
+              <span class="upload-plus">＋</span>
+              <strong>Escolher imagens</strong>
+              <small>Até 3 imagens do dispositivo</small>
+            </label>
+            <p id="fileStatus" class="help">Nenhuma imagem selecionada.</p>
+            <div id="imagePreviews" class="previews"></div>
+          </div>
+
+          <label class="field wide">
+            <span>Links de imagens <small>— sem limite</small></span>
+            <textarea id="imageLinks" rows="5" placeholder="Um link por linha&#10;https://exemplo.com/imagem.jpg"></textarea>
+            <small class="help">Links http:// ou https://. Não há limite de quantidade.</small>
+          </label>
+
+          <label class="field wide">
+            <span>Links de vídeos <small>— somente links</small></span>
+            <textarea id="videoLinks" rows="5" placeholder="Um link por linha&#10;https://youtube.com/watch?v=..."></textarea>
+            <small class="help">Vídeos não são enviados do dispositivo; apenas links.</small>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button id="publishButton" class="primary-btn" type="submit">Publicar notícia</button>
+          <button id="clearButton" class="secondary-btn" type="button">Limpar</button>
+        </div>
+      </form>
+
+      <aside class="panel manage-panel">
+        <div class="panel-head">
+          <span class="panel-num">02</span>
+          <div>
+            <h2>Publicadas</h2>
+            <p><span id="postCount">0</span> notícia(s).</p>
+          </div>
+        </div>
+        <div id="postList" class="post-list"></div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
