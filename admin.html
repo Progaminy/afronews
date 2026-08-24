@@ -2,10 +2,27 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
   <title>AfroNews — Administração</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    @media (max-width:760px){
+      .admin-shell{width:min(100% - 20px,1160px);padding:24px 0 56px}
+      .admin-top{align-items:flex-start;flex-direction:column;gap:14px;margin-bottom:18px}
+      .admin-top>div:last-child{display:flex;gap:8px;flex-wrap:wrap}
+      .admin-layout{grid-template-columns:1fr;gap:16px}
+      .panel{padding:18px}
+      .manage-panel{position:static}
+      .fields{grid-template-columns:1fr;gap:14px}
+      .field.wide{grid-column:auto}
+      .previews{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .preview{aspect-ratio:auto;background:#111}
+      .preview img{width:100%;height:auto;max-height:42vh;object-fit:contain}
+      .form-actions{position:sticky;bottom:0;z-index:5;margin:18px -18px -18px;padding:12px 18px;background:#fffdf8;border-top:1px solid #ddd}
+      .form-actions button{flex:1}
+    }
+  </style>
 </head>
 <body class="admin-page">
 <header class="topbar">
@@ -72,7 +89,7 @@
           <span class="panel-num">01</span>
           <div>
             <h2>Nova publicação</h2>
-            <p>Título e texto são obrigatórios.</p>
+            <p>Título, categoria e texto são obrigatórios. Os links sociais são opcionais.</p>
           </div>
         </div>
 
@@ -114,14 +131,29 @@
 
           <label class="field wide">
             <span>Links de imagens <small>— sem limite</small></span>
-            <textarea id="imageLinks" rows="5" placeholder="Um link por linha&#10;https://exemplo.com/imagem.jpg"></textarea>
+            <textarea id="imageLinks" rows="4" placeholder="Um link por linha&#10;https://exemplo.com/imagem.jpg"></textarea>
             <small class="help">Links http:// ou https://. Não há limite de quantidade.</small>
           </label>
 
           <label class="field wide">
             <span>Links de vídeos <small>— somente links</small></span>
-            <textarea id="videoLinks" rows="5" placeholder="Um link por linha&#10;https://youtube.com/watch?v=..."></textarea>
+            <textarea id="videoLinks" rows="4" placeholder="Um link por linha&#10;https://youtube.com/watch?v=..."></textarea>
             <small class="help">Vídeos não são enviados do dispositivo; apenas links.</small>
+          </label>
+
+          <label class="field wide">
+            <span>Link adicional do YouTube <small>— opcional</small></span>
+            <input id="youtubeLink" type="url" inputmode="url" placeholder="https://youtube.com/...">
+          </label>
+
+          <label class="field wide">
+            <span>Link adicional do Facebook <small>— opcional</small></span>
+            <input id="facebookLink" type="url" inputmode="url" placeholder="https://facebook.com/...">
+          </label>
+
+          <label class="field wide">
+            <span>Link adicional do TikTok <small>— opcional</small></span>
+            <input id="tiktokLink" type="url" inputmode="url" placeholder="https://tiktok.com/@...">
           </label>
         </div>
 

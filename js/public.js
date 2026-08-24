@@ -76,7 +76,7 @@ function filteredPosts() {
 function mainFeature(post) {
   const cover = imageList(post)[0] || "";
   return `<article class="feature">
-    <div class="feature-media">${cover ? `<img src="${esc(cover)}" alt="">` : ""}</div>
+    <div class="feature-media">${cover ? `<img src="${esc(cover)}" alt="Imagem principal da notícia" loading="eager">` : ""}</div>
     <div class="feature-body">
       <span class="chip">${esc(post.category)}</span>
       <h2>${esc(post.title)}</h2>
@@ -90,7 +90,7 @@ function mainFeature(post) {
 function leadSmall(post) {
   const cover = imageList(post)[0] || "";
   return `<article class="lead-small">
-    <div class="lead-small-media">${cover ? `<img src="${esc(cover)}" alt="">` : ""}</div>
+    <div class="lead-small-media">${cover ? `<img src="${esc(cover)}" alt="Imagem da notícia" loading="lazy">` : ""}</div>
     <div>
       <span class="chip">${esc(post.category)}</span>
       <h3>${esc(post.title)}</h3>
@@ -103,7 +103,7 @@ function leadSmall(post) {
 function card(post) {
   const cover = imageList(post)[0] || "";
   return `<article class="news-card">
-    <div class="card-media">${cover ? `<img src="${esc(cover)}" alt="">` : ""}</div>
+    <div class="card-media">${cover ? `<img src="${esc(cover)}" alt="Imagem da notícia" loading="lazy">` : ""}</div>
     <div class="card-body">
       <span class="chip">${esc(post.category)}</span>
       <h3>${esc(post.title)}</h3>
@@ -122,7 +122,6 @@ function render() {
   el.kicker.textContent = hasFilter ? "Categoria" : hasSearch ? "Pesquisa" : "Agora";
   el.title.textContent = hasFilter ? state.category : hasSearch ? `Resultados para “${state.search.trim()}”` : "Últimas notícias";
   el.clear.hidden = !hasFilter && !hasSearch;
-
   el.featured.innerHTML = "";
   el.grid.innerHTML = "";
   el.empty.hidden = posts.length > 0;
@@ -133,14 +132,9 @@ function render() {
   const lead = posts[0];
   const side = posts.slice(1, 3);
   const remainder = posts.slice(3);
-
-  el.featured.innerHTML =
-    mainFeature(lead) +
+  el.featured.innerHTML = mainFeature(lead) +
     `<aside class="lead-stack">${side.length ? side.map(leadSmall).join("") : '<div class="lead-small"><div><span class="chip">AfroNews</span><h3>Mais notícias serão publicadas aqui.</h3></div></div>'}</aside>`;
-
-  el.grid.innerHTML = remainder.length
-    ? remainder.map(card).join("")
-    : posts.slice(1).map(card).join("");
+  el.grid.innerHTML = remainder.length ? remainder.map(card).join("") : posts.slice(1).map(card).join("");
 }
 
 function embedUrl(raw) {
@@ -149,15 +143,11 @@ function embedUrl(raw) {
     const host = url.hostname.replace(/^www\./, "");
     const parts = url.pathname.split("/").filter(Boolean);
 
-    if (host === "youtu.be" && parts[0]) {
-      return "https://www.youtube.com/embed/" + encodeURIComponent(parts[0]);
-    }
+    if (host === "youtu.be" && parts[0]) return "https://www.youtube.com/embed/" + encodeURIComponent(parts[0]);
     if (host === "youtube.com" || host === "m.youtube.com") {
       const id = url.searchParams.get("v");
       if (id) return "https://www.youtube.com/embed/" + encodeURIComponent(id);
-      if (["shorts", "embed", "live"].includes(parts[0]) && parts[1]) {
-        return "https://www.youtube.com/embed/" + encodeURIComponent(parts[1]);
-      }
+      if (["shorts", "embed", "live"].includes(parts[0]) && parts[1]) return "https://www.youtube.com/embed/" + encodeURIComponent(parts[1]);
     }
     if (host === "vimeo.com" || host === "player.vimeo.com") {
       const id = parts.find((part) => /^\d+$/.test(part));
@@ -167,6 +157,20 @@ function embedUrl(raw) {
   return null;
 }
 
+function relatedLinksHtml(post) {
+  const links = post?.social_links && typeof post.social_links === "object" ? post.social_links : {};
+  const items = [
+    ["youtube", "YouTube"],
+    ["facebook", "Facebook"],
+    ["tiktok", "TikTok"]
+  ].filter(([key]) => safeUrl(links[key]));
+
+  if (!items.length) return "";
+  return `<div class="related-links" aria-label="Links adicionais da publicação">
+    ${items.map(([key, label]) => `<a href="${esc(links[key])}" target="_blank" rel="noopener noreferrer">Abrir no ${label} ↗</a>`).join("")}
+  </div>`;
+}
+
 function openArticle(id) {
   const post = state.posts.find((item) => item.id === id);
   if (!post) return;
@@ -174,7 +178,7 @@ function openArticle(id) {
   const images = imageList(post);
   const cover = images[0] || "";
   const gallery = images.length > 1
-    ? `<div class="gallery">${images.slice(1).map((url) => `<img src="${esc(url)}" alt="Imagem da notícia">`).join("")}</div>`
+    ? `<div class="gallery">${images.slice(1).map((url) => `<img src="${esc(url)}" alt="Imagem da notícia" loading="lazy">`).join("")}</div>`
     : "";
   const videos = Array.isArray(post.video_urls) ? post.video_urls.filter(safeUrl) : [];
   const videoHtml = videos.length
@@ -188,7 +192,7 @@ function openArticle(id) {
 
   el.article.innerHTML = `
     <header class="article-hero">
-      ${cover ? `<img src="${esc(cover)}" alt="">` : ""}
+      ${cover ? `<img src="${esc(cover)}" alt="Imagem principal da notícia">` : ""}
       <div class="article-head">
         <span class="chip">${esc(post.category)}</span>
         <h1>${esc(post.title)}</h1>
@@ -199,6 +203,7 @@ function openArticle(id) {
       <div class="article-text">${esc(post.body)}</div>
       ${gallery}
       ${videoHtml}
+      ${relatedLinksHtml(post)}
     </div>`;
   el.dialog.showModal();
 }
@@ -211,12 +216,11 @@ async function loadNews() {
 
   const { data, error } = await db
     .from(NEWS_TABLE)
-    .select("id,title,body,category,image_urls,video_urls,created_at")
+    .select("id,title,body,category,image_urls,video_urls,social_links,created_at")
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
   el.loading.hidden = true;
-
   if (error) {
     console.error(error);
     el.error.hidden = false;
@@ -235,9 +239,7 @@ document.addEventListener("click", (event) => {
     state.category = categoryButton.dataset.category;
     state.search = "";
     el.search.value = "";
-    document.querySelectorAll("[data-category]").forEach((button) => {
-      button.classList.toggle("active", button.dataset.category === state.category);
-    });
+    document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("active", button.dataset.category === state.category));
     el.nav.classList.remove("open");
     render();
     return;
@@ -250,9 +252,7 @@ document.addEventListener("click", (event) => {
 el.search.addEventListener("input", () => {
   state.search = el.search.value;
   state.category = "Todas";
-  document.querySelectorAll("[data-category]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.category === "Todas");
-  });
+  document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("active", button.dataset.category === "Todas"));
   render();
 });
 
@@ -260,9 +260,7 @@ el.clear.addEventListener("click", () => {
   state.category = "Todas";
   state.search = "";
   el.search.value = "";
-  document.querySelectorAll("[data-category]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.category === "Todas");
-  });
+  document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("active", button.dataset.category === "Todas"));
   render();
 });
 

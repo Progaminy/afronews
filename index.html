@@ -2,139 +2,33 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="AfroNews — África no centro, o mundo em perspectiva.">
   <title>AfroNews</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .site-header{
-      position:sticky;
-      top:0;
-      z-index:90;
-      background:rgba(247,243,235,.98);
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
-      backdrop-filter:blur(12px);
-    }
-    .utility-inner{
-      gap:18px;
-    }
-    .utility-contact{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .utility-contact a,
-    .utility-contact span{
-      color:#f0f0f0;
-      text-decoration:none;
-      font-size:.68rem;
-      font-weight:800;
-      letter-spacing:.045em;
-      white-space:nowrap;
-    }
-    .utility-contact a:hover{
-      color:#ff5365;
-    }
-    .masthead{
-      min-height:96px;
-      padding-top:14px;
-      padding-bottom:12px;
-    }
-    .wordmark{
-      font-size:clamp(2.8rem,5vw,4.8rem);
-    }
-    .masthead>p{
-      margin-top:7px;
-    }
-    .mast-search{
-      bottom:24px;
-    }
-    .category-bar{
-      position:static;
-    }
-    .footer-inner{
-      min-height:190px;
-      align-items:flex-start;
-      padding:32px 0;
-    }
-    .footer-main{
-      display:grid;
-      gap:8px;
-    }
-    .footer-social{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px 16px;
-      margin-top:12px;
-    }
-    .footer-social a{
-      color:#fff;
-      text-decoration:none;
-      font-size:.82rem;
-      font-weight:800;
-    }
-    .footer-social a:hover{
-      color:#e3293c;
-    }
-    .footer-credit{
-      margin-top:18px!important;
-      padding-top:14px;
-      border-top:1px solid #333;
-      color:#d8d8d8;
-      font-family:var(--sans)!important;
-      font-style:normal!important;
-      font-size:.82rem;
-    }
-    .footer-credit strong{
-      color:#fff;
-    }
-    .footer-meta{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-      color:#aaa;
-      font-size:.78rem;
-    }
+    .site-header{position:sticky;top:0;z-index:90;background:rgba(247,243,235,.98);box-shadow:0 8px 24px rgba(0,0,0,.08);backdrop-filter:blur(12px)}
+    .utility-inner{gap:18px}.utility-contact{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+    .utility-contact a,.utility-contact span{color:#f0f0f0;text-decoration:none;font-size:.68rem;font-weight:800;letter-spacing:.045em;white-space:nowrap}
+    .utility-contact a:hover{color:#ff5365}.masthead{min-height:96px;padding-top:14px;padding-bottom:12px}.wordmark{font-size:clamp(2.8rem,5vw,4.8rem)}
+    .masthead>p{margin-top:7px}.mast-search{bottom:24px}.category-bar{position:static}
+    .footer-inner{min-height:190px;align-items:flex-start;padding:32px 0}.footer-main{display:grid;gap:8px}.footer-social{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px}
+    .footer-social a{color:#fff;text-decoration:none;font-size:.82rem;font-weight:800}.footer-social a:hover{color:#e3293c}
+    .footer-credit{margin-top:18px!important;padding-top:14px;border-top:1px solid #333;color:#d8d8d8;font-family:var(--sans)!important;font-style:normal!important;font-size:.82rem}
+    .footer-credit strong{color:#fff}.footer-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;color:#aaa;font-size:.78rem}
+    .related-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
+    .related-links a{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:850;font-size:.82rem}
+    .related-links a:hover{border-color:var(--red);color:var(--red)}
     @media (max-width:760px){
-      .utility-inner{
-        min-height:42px;
-      }
-      .utility-tagline,
-      #currentDate{
-        display:none;
-      }
-      .utility-contact{
-        width:100%;
-        justify-content:center;
-        gap:8px 12px;
-      }
-      .masthead{
-        min-height:82px;
-        padding:12px 16px;
-        display:flex;
-        flex-direction:column;
-        align-items:flex-start;
-        justify-content:center;
-      }
-      .wordmark{
-        font-size:2.7rem;
-      }
-      .masthead>p{
-        margin:4px 0 0;
-      }
-      .mast-search{
-        display:none;
-      }
-      .footer-inner{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .footer-meta{
-        align-items:flex-start;
-      }
+      .site-header{box-shadow:0 4px 14px rgba(0,0,0,.09)}
+      .utility-inner{min-height:38px}.utility-tagline,#currentDate{display:none}.utility-contact{width:100%;justify-content:center;gap:7px 10px;overflow-x:auto;flex-wrap:nowrap;padding:0 2px}
+      .utility-contact a{font-size:.63rem}.masthead{min-height:64px;padding:8px 16px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.wordmark{font-size:2.25rem}.masthead>p{margin:2px 0 0;font-size:.75rem}.mast-search{display:none}
+      .category-inner{min-height:42px}.nav-btn{padding:12px 12px 11px;font-size:.72rem}.shell{width:min(100% - 20px,1240px);padding:24px 0 56px}.news-heading{margin-bottom:18px}.news-heading h1{font-size:2rem}
+      .feature{display:block;min-height:0}.feature-media{min-height:0;background:#111}.feature-media img{width:100%;height:auto;min-height:0;max-height:64vh;object-fit:contain}.feature-body{padding:20px 18px 22px}.feature-body h2{font-size:2.05rem}
+      .lead-zone{grid-template-columns:1fr;gap:18px}.lead-stack{display:grid;grid-template-rows:none}.lead-small{grid-template-columns:96px 1fr;gap:12px}.lead-small-media{width:96px;background:#111}.lead-small-media img{object-fit:contain}
+      .news-grid{grid-template-columns:1fr;row-gap:24px}.news-card,.news-card:nth-child(3n+2),.news-card:nth-child(3n+3){border-left:0;padding-left:0}.card-media{aspect-ratio:auto;background:#111}.card-media img{width:100%;height:auto;max-height:58vh;object-fit:contain}
+      .article-dialog{width:100%;max-height:100vh;height:100vh}.article-hero{min-height:0;display:block;padding:0;background:#111;color:#fff}.article-hero>img{position:static;width:100%;height:auto;max-height:68vh;object-fit:contain;opacity:1}.article-hero::after{display:none}.article-head{padding:20px 18px 22px;background:#111}.article-head h1{font-size:2.15rem}.article-body{padding:28px 18px 42px}.article-text{font-size:1.06rem;line-height:1.75}.gallery{grid-template-columns:1fr}.gallery img{height:auto;aspect-ratio:auto;max-height:70vh;object-fit:contain;background:#111}.dialog-close{position:fixed;right:8px;top:8px;margin:0}.related-links{display:grid;grid-template-columns:1fr}.related-links a{justify-content:center;min-height:46px}
+      .footer-inner{flex-direction:column;align-items:flex-start}.footer-meta{align-items:flex-start}
     }
   </style>
 </head>
@@ -145,8 +39,8 @@
       <span class="utility-tagline">África no centro. O mundo em perspectiva.</span>
       <div class="utility-contact" aria-label="Contactos e redes sociais">
         <a href="https://wa.me/25872599084" target="_blank" rel="noopener noreferrer">WhatsApp +258 72 599 084</a>
-        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.facebook.com/opiniaoafro" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://www.youtube.com/@MUSSAGINIKOZI-t4k" target="_blank" rel="noopener noreferrer">YouTube</a>
         <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a>
         <span id="currentDate"></span>
       </div>
@@ -154,94 +48,42 @@
   </div>
 
   <div class="masthead">
-    <a class="wordmark" href="index.html" aria-label="AfroNews">
-      <span>AFRO</span><strong>NEWS</strong>
-    </a>
+    <a class="wordmark" href="index.html" aria-label="AfroNews"><span>AFRO</span><strong>NEWS</strong></a>
     <p>Informação sem fronteiras</p>
-    <label class="mast-search">
-      <span aria-hidden="true">⌕</span>
-      <input id="searchInput" type="search" placeholder="Pesquisar" autocomplete="off">
-    </label>
+    <label class="mast-search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Pesquisar" autocomplete="off"></label>
   </div>
 
   <div class="category-bar">
     <div class="category-inner">
       <button id="menuBtn" class="menu-btn" type="button" aria-label="Abrir menu">☰ Categorias</button>
       <nav id="mainNav" class="main-nav" aria-label="Categorias">
-        <button class="nav-btn active" data-category="Todas">Últimas</button>
-        <button class="nav-btn" data-category="África">África</button>
-        <button class="nav-btn" data-category="Europa">Europa</button>
-        <button class="nav-btn" data-category="América">América</button>
-        <button class="nav-btn" data-category="Rússia">Rússia</button>
-        <button class="nav-btn" data-category="Ásia">Ásia</button>
-        <button class="nav-btn" data-category="Oceania">Oceania</button>
+        <button class="nav-btn active" data-category="Todas">Últimas</button><button class="nav-btn" data-category="África">África</button><button class="nav-btn" data-category="Europa">Europa</button><button class="nav-btn" data-category="América">América</button><button class="nav-btn" data-category="Rússia">Rússia</button><button class="nav-btn" data-category="Ásia">Ásia</button><button class="nav-btn" data-category="Oceania">Oceania</button>
       </nav>
     </div>
   </div>
 </header>
 
 <main class="shell">
-  <div class="news-heading">
-    <div>
-      <p id="sectionKicker" class="section-kicker">Agora</p>
-      <h1 id="sectionTitle">Últimas notícias</h1>
-    </div>
-    <button id="clearFilter" class="text-btn" type="button" hidden>Mostrar tudo</button>
-  </div>
-
-  <div id="loadingState" class="empty-state">
-    <div class="spinner" aria-hidden="true"></div>
-    <p>A carregar notícias...</p>
-  </div>
-
-  <div id="errorState" class="empty-state" hidden>
-    <h3>Não foi possível carregar as notícias.</h3>
-    <p>Tente novamente em instantes.</p>
-    <button id="retryBtn" class="primary-btn" type="button">Tentar novamente</button>
-  </div>
-
-  <div id="emptyState" class="empty-state" hidden>
-    <h3>Ainda não há notícias nesta seleção.</h3>
-    <p>Volte em breve para acompanhar as novas publicações.</p>
-  </div>
-
-  <div id="content" hidden>
-    <section id="featured" class="lead-zone" aria-label="Manchete principal"></section>
-
-    <div class="rule-title">
-      <span>Mais notícias</span>
-    </div>
-    <section id="newsGrid" class="news-grid" aria-label="Mais notícias"></section>
-  </div>
+  <div class="news-heading"><div><p id="sectionKicker" class="section-kicker">Agora</p><h1 id="sectionTitle">Últimas notícias</h1></div><button id="clearFilter" class="text-btn" type="button" hidden>Mostrar tudo</button></div>
+  <div id="loadingState" class="empty-state"><div class="spinner" aria-hidden="true"></div><p>A carregar notícias...</p></div>
+  <div id="errorState" class="empty-state" hidden><h3>Não foi possível carregar as notícias.</h3><p>Tente novamente em instantes.</p><button id="retryBtn" class="primary-btn" type="button">Tentar novamente</button></div>
+  <div id="emptyState" class="empty-state" hidden><h3>Ainda não há notícias nesta seleção.</h3><p>Volte em breve para acompanhar as novas publicações.</p></div>
+  <div id="content" hidden><section id="featured" class="lead-zone" aria-label="Manchete principal"></section><div class="rule-title"><span>Mais notícias</span></div><section id="newsGrid" class="news-grid" aria-label="Mais notícias"></section></div>
 </main>
 
-<dialog id="articleDialog" class="article-dialog">
-  <button id="dialogClose" class="dialog-close" type="button" aria-label="Fechar">×</button>
-  <article id="articleContent"></article>
-</dialog>
-
+<dialog id="articleDialog" class="article-dialog"><button id="dialogClose" class="dialog-close" type="button" aria-label="Fechar">×</button><article id="articleContent"></article></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-main">
-      <div class="footer-wordmark">AFRO<span>NEWS</span></div>
-      <p>África no centro. O mundo em perspectiva.</p>
-      <div class="footer-social" aria-label="Contactos e redes sociais">
-        <a href="https://wa.me/25872599084" target="_blank" rel="noopener noreferrer">WhatsApp +258 72 599 084</a>
-        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
-        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a>
-      </div>
+      <div class="footer-wordmark">AFRO<span>NEWS</span></div><p>África no centro. O mundo em perspectiva.</p>
+      <div class="footer-social" aria-label="Contactos e redes sociais"><a href="https://wa.me/25872599084" target="_blank" rel="noopener noreferrer">WhatsApp +258 72 599 084</a><a href="https://www.facebook.com/opiniaoafro" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.youtube.com/@MUSSAGINIKOZI-t4k" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></div>
       <p class="footer-credit">Criado por <strong>Pensador Sem Fronteiras</strong></p>
     </div>
-    <div class="footer-meta">
-      <span id="footerYear"></span>
-      <span>AfroNews</span>
-    </div>
+    <div class="footer-meta"><span id="footerYear"></span><span>AfroNews</span></div>
   </div>
 </footer>
-
 <script type="module" src="js/public.js"></script>
 </body>
 </html>
