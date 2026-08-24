@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="AfroNews — África no centro, o mundo em perspectiva.">
+  <title>AfroNews</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="utility-bar">
+    <div class="utility-inner">
+      <span>África no centro. O mundo em perspectiva.</span>
+      <span id="currentDate"></span>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <a class="wordmark" href="index.html" aria-label="AfroNews">
+      <span>AFRO</span><strong>NEWS</strong>
+    </a>
+    <p>Informação sem fronteiras</p>
+    <label class="mast-search">
+      <span aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" placeholder="Pesquisar" autocomplete="off">
+    </label>
+  </div>
+
+  <div class="category-bar">
+    <div class="category-inner">
+      <button id="menuBtn" class="menu-btn" type="button" aria-label="Abrir menu">☰ Categorias</button>
+      <nav id="mainNav" class="main-nav" aria-label="Categorias">
+        <button class="nav-btn active" data-category="Todas">Últimas</button>
+        <button class="nav-btn" data-category="África">África</button>
+        <button class="nav-btn" data-category="Europa">Europa</button>
+        <button class="nav-btn" data-category="América">América</button>
+        <button class="nav-btn" data-category="Rússia">Rússia</button>
+        <button class="nav-btn" data-category="Ásia">Ásia</button>
+        <button class="nav-btn" data-category="Oceania">Oceania</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="news-heading">
+    <div>
+      <p id="sectionKicker" class="section-kicker">Agora</p>
+      <h1 id="sectionTitle">Últimas notícias</h1>
+    </div>
+    <button id="clearFilter" class="text-btn" type="button" hidden>Mostrar tudo</button>
+  </div>
+
+  <div id="loadingState" class="empty-state">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>A carregar notícias...</p>
+  </div>
+
+  <div id="errorState" class="empty-state" hidden>
+    <h3>Não foi possível carregar as notícias.</h3>
+    <p>Tente novamente em instantes.</p>
+    <button id="retryBtn" class="primary-btn" type="button">Tentar novamente</button>
+  </div>
+
+  <div id="emptyState" class="empty-state" hidden>
+    <h3>Ainda não há notícias nesta seleção.</h3>
+    <p>Volte em breve para acompanhar as novas publicações.</p>
+  </div>
+
+  <div id="content" hidden>
+    <section id="featured" class="lead-zone" aria-label="Manchete principal"></section>
+
+    <div class="rule-title">
+      <span>Mais notícias</span>
+    </div>
+    <section id="newsGrid" class="news-grid" aria-label="Mais notícias"></section>
+  </div>
+</main>
+
+<dialog id="articleDialog" class="article-dialog">
+  <button id="dialogClose" class="dialog-close" type="button" aria-label="Fechar">×</button>
+  <article id="articleContent"></article>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-wordmark">AFRO<span>NEWS</span></div>
+      <p>África no centro. O mundo em perspectiva.</p>
+    </div>
+    <span id="footerYear"></span>
+  </div>
+</footer>
+
+<script type="module" src="js/public.js"></script>
+</body>
+</html>
