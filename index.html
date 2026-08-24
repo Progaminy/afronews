@@ -1,181 +1,86 @@
 <!doctype html>
 <html lang="pt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="AfroNews — notícias de África e do mundo.">
-<title>AfroNews</title>
-<style>
-:root{--bg:#f3f2ed;--card:#fff;--ink:#111;--muted:#6f6f6f;--line:#deddd7;--red:#c51f2a;--dark:#0c0c0c;--r:20px}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}img{max-width:100%;display:block}[hidden]{display:none!important}
-header{position:sticky;top:0;z-index:40;background:rgba(12,12,12,.97);border-bottom:1px solid #262626}.bar{width:min(1220px,calc(100% - 28px));min-height:70px;margin:auto;display:flex;align-items:center;gap:20px}.brand{display:flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-weight:900;font-size:1.2rem}.mark{display:grid;place-items:center;width:35px;height:35px;border-radius:10px;background:var(--red)}nav{margin-left:auto;display:flex;align-items:center;gap:3px}.nav{border:0;background:transparent;color:#bbb;padding:10px;border-radius:9px;font-size:.88rem;font-weight:750}.nav:hover,.nav.active{background:#222;color:#fff}.adminnav{margin-left:6px;border:1px solid #404040;color:#fff}.menu{display:none;margin-left:auto;width:42px;height:42px;border:1px solid #444;border-radius:10px;background:#111;color:#fff}
-.hero{min-height:370px;padding:70px max(26px,calc((100vw - 1220px)/2)) 54px;color:#fff;background:radial-gradient(circle at 85% 0,#6e1a21 0,transparent 35%),linear-gradient(130deg,#111,#202020);display:grid;grid-template-columns:1.5fr .8fr;gap:60px;align-items:end}.eyebrow{margin:0 0 10px;color:#e35b64;text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:900}.hero h1,.adminhead h1{margin:0;font:700 clamp(2.8rem,6vw,5.5rem)/.96 Georgia,serif;letter-spacing:-.055em}.hero p.text{max-width:700px;color:#d0d0d0;line-height:1.65}.search{display:flex;align-items:center;gap:8px;border:1px solid #444;background:#ffffff12;border-radius:999px;padding:5px 14px}.search input{width:100%;min-height:46px;border:0;outline:0;background:transparent;color:#fff}.shell{width:min(1220px,calc(100% - 28px));margin:auto;padding:50px 0 80px}.heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.heading h2{margin:0;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.04em}.kicker{margin:0 0 6px;color:var(--red);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em}.clear{border:0;background:transparent;color:var(--red);font-weight:850}
-.feature{min-height:500px;position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(135deg,#202020,#54181e);color:#fff}.feature>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}.feature:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.88))}.featurebody{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:clamp(24px,5vw,50px)}.chip{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--red);color:#fff;font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.feature h3{max-width:900px;margin:14px 0 10px;font:700 clamp(2.2rem,5vw,4.6rem)/1.02 Georgia,serif;letter-spacing:-.04em}.feature p{max-width:760px;color:#ddd;line-height:1.6}.read{border:0;border-radius:999px;padding:12px 18px;background:#fff;color:#111;font-weight:850}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px}.card{overflow:hidden;border:1px solid var(--line);border-radius:var(--r);background:#fff}.media{aspect-ratio:16/10;background:linear-gradient(135deg,#222,#5a171d)}.media img{width:100%;height:100%;object-fit:cover}.body{padding:20px}.body h3{margin:11px 0 8px;font:700 1.45rem/1.15 Georgia,serif}.body p{margin:0;color:var(--muted);line-height:1.55}.meta{margin-top:15px;color:#929292;font-size:.8rem}.card button{width:100%;padding:13px 20px;border:0;border-top:1px solid var(--line);background:#fff;color:var(--red);text-align:left;font-weight:850}.empty{padding:70px 20px;border:1px dashed #c7c6c0;border-radius:var(--r);text-align:center;background:#ffffff66}.empty h3{margin:0 0 8px}.empty p{margin:0;color:var(--muted)}
-.admin{width:min(1220px,calc(100% - 28px));margin:auto;padding:52px 0 80px}.adminhead{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:30px}.adminhead h1{font-size:clamp(2.7rem,7vw,5rem)}.adminhead p:last-child{color:var(--muted)}.layout{display:grid;grid-template-columns:1.6fr .8fr;gap:22px;align-items:start}.panel{padding:26px;border:1px solid var(--line);border-radius:24px;background:#fff}.manage{position:sticky;top:90px}.paneltitle{display:flex;gap:12px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--line)}.num{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#111;color:#fff;font-weight:900}.paneltitle h2{margin:0;font-size:1.35rem}.paneltitle p{margin:4px 0 0;color:var(--muted);font-size:.88rem}.fields{display:grid;grid-template-columns:1fr 1fr;gap:17px;padding-top:22px}.field{display:flex;flex-direction:column;gap:7px}.wide{grid-column:1/-1}.field>span{font-size:.9rem;font-weight:850}.field b{color:var(--red)}.field input,.field select,.field textarea{width:100%;padding:13px 14px;border:1px solid #d8d7d2;border-radius:12px;background:#fbfaf7;outline:0}.field textarea{resize:vertical;line-height:1.55}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px #c51f2a13}.upload{min-height:145px;display:grid;place-items:center;align-content:center;gap:5px;border:1px dashed #aaa;border-radius:15px;background:#fbfaf7;text-align:center}.upload input{display:none}.plus{font-size:2rem;color:var(--red)}.help{margin:0;color:var(--muted);font-size:.8rem}.previews{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.preview{aspect-ratio:4/3;overflow:hidden;border-radius:10px;background:#eee}.preview img{width:100%;height:100%;object-fit:cover}.actions{display:flex;gap:10px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}.primary,.secondary,.danger{padding:11px 15px;border-radius:11px;font-weight:850}.primary{border:1px solid var(--red);background:var(--red);color:#fff}.secondary{border:1px solid #ccc;background:#fff}.danger{border:1px solid #efc7ca;background:#fff4f5;color:#a5121b}.posts{display:grid;gap:11px;padding-top:16px}.postitem{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fbfaf7}.postitem h3{margin:9px 0 5px;font-size:.98rem}.postitem p{margin:0;color:var(--muted);font-size:.78rem}.postactions{display:flex;gap:7px;margin-top:10px}.postactions button{flex:1;padding:7px 9px;font-size:.77rem}.note{margin-top:18px;padding:15px 17px;border:1px solid #ead89e;border-radius:13px;background:#fff9e7;color:#6d5818;line-height:1.5;font-size:.88rem}
-dialog{width:min(900px,calc(100% - 24px));max-height:90vh;overflow:auto;padding:0;border:0;border-radius:22px;background:#fff}dialog::backdrop{background:#000b}.close{position:sticky;z-index:5;top:14px;float:right;margin:14px 14px -52px 0;width:40px;height:40px;border:0;border-radius:50%;background:#111d;color:#fff;font-size:1.5rem}.articlehero{min-height:320px;position:relative;display:flex;align-items:end;padding:32px;color:#fff;background:linear-gradient(135deg,#222,#5b181e)}.articlehero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}.articlehero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,#000d)}.articlehead{position:relative;z-index:2}.articlehead h1{margin:12px 0 8px;font:700 clamp(2rem,6vw,4rem)/1.02 Georgia,serif;letter-spacing:-.04em}.articlebody{padding:32px}.articletext{white-space:pre-wrap;font:400 1.08rem/1.85 Georgia,serif}.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:26px}.gallery img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px}.videos{display:grid;gap:14px;margin-top:26px}.video{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#111}.videolink{display:block;padding:13px;border-radius:10px;background:#f2f1ed;color:var(--red);font-weight:800;overflow-wrap:anywhere}
-.toast{position:fixed;z-index:100;left:50%;bottom:26px;transform:translate(-50%,15px);min-width:min(350px,calc(100% - 28px));padding:12px 15px;border-radius:11px;background:#111;color:#fff;text-align:center;font-weight:750;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.err{background:#99141c}footer{display:flex;justify-content:space-between;gap:20px;padding:26px max(24px,calc((100vw - 1220px)/2));background:#0c0c0c;color:#aaa;font-size:.84rem}footer strong{color:#fff}
-@media(max-width:950px){.menu{display:grid;place-items:center}nav{display:none;position:absolute;top:62px;left:14px;right:14px;padding:10px;border:1px solid #333;border-radius:13px;background:#111;flex-wrap:wrap}nav.open{display:flex}.adminnav{margin-left:0}.hero{grid-template-columns:1fr;gap:28px}.grid{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.manage{position:static}}
-@media(max-width:620px){.hero{padding:48px 18px 38px}.shell,.admin{width:calc(100% - 20px)}.grid{grid-template-columns:1fr}.feature{min-height:455px}.feature h3{font-size:2.25rem}.adminhead{align-items:start;flex-direction:column}.panel{padding:18px}.fields{grid-template-columns:1fr}.wide{grid-column:auto}.previews,.gallery{grid-template-columns:1fr}.articlehero,.articlebody{padding:23px}footer{flex-direction:column;padding:24px 18px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="AfroNews — África no centro, o mundo em perspectiva.">
+  <title>AfroNews</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header><div class="bar">
-<a class="brand" href="#" data-view="home"><span class="mark">A</span>AfroNews</a>
-<button id="menu" class="menu" type="button" aria-label="Menu">☰</button>
-<nav id="nav">
-<button class="nav active" data-view="home">Início</button>
-<button class="nav" data-cat="África">África</button>
-<button class="nav" data-cat="Europa">Europa</button>
-<button class="nav" data-cat="América">América</button>
-<button class="nav" data-cat="Rússia">Rússia</button>
-<button class="nav" data-cat="Ásia">Ásia</button>
-<button class="nav" data-cat="Oceania">Oceania</button>
-<button class="nav adminnav" data-view="admin">Admin</button>
-</nav></div></header>
+<header class="topbar">
+  <div class="bar">
+    <a class="brand" href="index.html"><span class="brand-mark">A</span><span>AfroNews</span></a>
+    <button id="menuBtn" class="menu-btn" type="button" aria-label="Abrir menu">☰</button>
+    <nav id="mainNav" class="main-nav" aria-label="Categorias">
+      <button class="nav-btn active" data-category="Todas">Início</button>
+      <button class="nav-btn" data-category="África">África</button>
+      <button class="nav-btn" data-category="Europa">Europa</button>
+      <button class="nav-btn" data-category="América">América</button>
+      <button class="nav-btn" data-category="Rússia">Rússia</button>
+      <button class="nav-btn" data-category="Ásia">Ásia</button>
+      <button class="nav-btn" data-category="Oceania">Oceania</button>
+    </nav>
+  </div>
+</header>
 
 <main>
-<section id="home">
-<div class="hero">
-<div><p class="eyebrow">África no centro. O mundo em perspectiva.</p><h1>Notícias que ligam continentes.</h1><p class="text">Acompanhe acontecimentos de África, Europa, América, Rússia, Ásia e Oceania num só lugar.</p></div>
-<label class="search">⌕<input id="search" type="search" placeholder="Pesquisar notícias..."></label>
-</div>
-<div class="shell">
-<div class="heading"><div><p id="kicker" class="kicker">Últimas notícias</p><h2 id="sectionTitle">Em destaque</h2></div><button id="clear" class="clear" hidden>Ver todas</button></div>
-<div id="featured"></div><div id="grid" class="grid"></div>
-<div id="empty" class="empty" hidden><h3>Ainda não há notícias publicadas.</h3><p>Use a aba Admin para publicar a primeira notícia do AfroNews.</p></div>
-</div>
-</section>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">África no centro. O mundo em perspectiva.</p>
+      <h1>Notícias que ligam continentes.</h1>
+      <p class="hero-copy">Acompanhe acontecimentos de África, Europa, América, Rússia, Ásia e Oceania num só lugar.</p>
+    </div>
+    <label class="search-box">
+      <span aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" placeholder="Pesquisar notícias..." autocomplete="off">
+    </label>
+  </section>
 
-<section id="admin" class="admin" hidden>
-<div class="adminhead"><div><p class="eyebrow">Painel editorial</p><h1>Admin AfroNews</h1><p>Publique notícias e organize o conteúdo por região.</p></div><button class="secondary" data-view="home">← Voltar ao portal</button></div>
-<div class="layout">
-<form id="form" class="panel" novalidate>
-<div class="paneltitle"><span class="num">01</span><div><h2>Nova publicação</h2><p>Título e texto são obrigatórios.</p></div></div>
-<div class="fields">
-<label class="field wide"><span>Título <b>*</b></span><input id="title" maxlength="180" placeholder="Título da notícia" required></label>
-<label class="field"><span>Categoria <b>*</b></span><select id="category" required><option value="">Selecionar categoria</option><option>África</option><option>Europa</option><option>América</option><option>Rússia</option><option>Ásia</option><option>Oceania</option></select></label>
-<label class="field wide"><span>Texto <b>*</b></span><textarea id="text" rows="9" placeholder="Escreva o conteúdo completo da notícia..." required></textarea></label>
-<div class="field wide"><span>Imagens do dispositivo <small>— máximo 3</small></span><label class="upload"><input id="files" type="file" accept="image/*" multiple><span class="plus">＋</span><strong>Escolher imagens</strong><small>Até 3 imagens do dispositivo</small></label><p id="filestatus" class="help">Nenhuma imagem selecionada.</p><div id="previews" class="previews"></div></div>
-<label class="field wide"><span>Links de imagens <small>— sem limite</small></span><textarea id="imagelinks" rows="5" placeholder="Um link por linha&#10;https://exemplo.com/imagem.jpg"></textarea><small class="help">Somente links http:// ou https://.</small></label>
-<label class="field wide"><span>Links de vídeos <small>— somente links</small></span><textarea id="videolinks" rows="5" placeholder="Um link por linha&#10;https://youtube.com/watch?v=..."></textarea><small class="help">YouTube e Vimeo abrem incorporados; outros links abrem externamente.</small></label>
-</div>
-<div class="actions"><button id="publish" class="primary" type="submit">Publicar notícia</button><button id="reset" class="secondary" type="button">Limpar</button></div>
-</form>
-<aside class="panel manage"><div class="paneltitle"><span class="num">02</span><div><h2>Publicadas</h2><p><span id="count">0</span> notícia(s) no portal.</p></div></div><div id="posts" class="posts"></div></aside>
-</div>
-<div class="note"><strong>Protótipo local:</strong> as publicações ficam guardadas neste navegador. Para que todas as pessoas vejam as mesmas notícias e para proteger o Admin com login, será necessário ligar esta interface a uma base de dados e autenticação.</div>
-</section>
+  <section class="shell">
+    <div class="section-head">
+      <div>
+        <p id="sectionKicker" class="section-kicker">Últimas notícias</p>
+        <h2 id="sectionTitle">Em destaque</h2>
+      </div>
+      <button id="clearFilter" class="text-btn" type="button" hidden>Ver todas</button>
+    </div>
+
+    <div id="loadingState" class="empty-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>A carregar notícias...</p>
+    </div>
+
+    <div id="errorState" class="empty-state" hidden>
+      <h3>Não foi possível carregar as notícias.</h3>
+      <p>Tente novamente em instantes.</p>
+      <button id="retryBtn" class="primary-btn" type="button">Tentar novamente</button>
+    </div>
+
+    <div id="emptyState" class="empty-state" hidden>
+      <h3>Ainda não há notícias nesta seleção.</h3>
+      <p>Volte em breve para acompanhar as novas publicações.</p>
+    </div>
+
+    <div id="content" hidden>
+      <div id="featured"></div>
+      <div id="newsGrid" class="news-grid"></div>
+    </div>
+  </section>
 </main>
 
-<dialog id="dialog"><button id="close" class="close" type="button">×</button><article id="article"></article></dialog>
-<div id="toast" class="toast"></div>
-<footer><strong>AfroNews</strong><span id="year"></span></footer>
+<dialog id="articleDialog" class="article-dialog">
+  <button id="dialogClose" class="dialog-close" type="button" aria-label="Fechar">×</button>
+  <article id="articleContent"></article>
+</dialog>
 
-<script>
-(function(){
-"use strict";
-var KEY="afronews_posts_v1";
-var cats=["África","Europa","América","Rússia","Ásia","Oceania"];
-var state={posts:load(),category:"Todas",search:"",files:[]};
-var home=document.getElementById("home"),admin=document.getElementById("admin"),nav=document.getElementById("nav"),search=document.getElementById("search"),featured=document.getElementById("featured"),grid=document.getElementById("grid"),empty=document.getElementById("empty"),kicker=document.getElementById("kicker"),sectionTitle=document.getElementById("sectionTitle"),clear=document.getElementById("clear"),form=document.getElementById("form"),title=document.getElementById("title"),category=document.getElementById("category"),text=document.getElementById("text"),files=document.getElementById("files"),filestatus=document.getElementById("filestatus"),previews=document.getElementById("previews"),imagelinks=document.getElementById("imagelinks"),videolinks=document.getElementById("videolinks"),publish=document.getElementById("publish"),posts=document.getElementById("posts"),count=document.getElementById("count"),dialog=document.getElementById("dialog"),article=document.getElementById("article"),toast=document.getElementById("toast");
-document.getElementById("year").textContent="© "+new Date().getFullYear();
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-function load(){try{var x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state.posts));return true}catch(e){notify("Não foi possível guardar. As imagens podem estar a ocupar demasiado espaço.",true);return false}}
-function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function safe(u){try{var x=new URL(u);return x.protocol==="http:"||x.protocol==="https:"}catch(e){return false}}
-function links(v){return v.split(/\r?\n/).map(function(x){return x.trim()}).filter(function(x){return x&&safe(x)})}
-function imgs(p){return (p.deviceImages||[]).concat(p.imageLinks||[]).filter(Boolean)}
-function excerpt(s,n){var x=String(s).replace(/\s+/g," ").trim();return x.length>n?x.slice(0,n).trim()+"…":x}
-function date(s){try{return new Intl.DateTimeFormat("pt-PT",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date(s))}catch(e){return""}}
-function id(){return window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
-function notify(m,err){toast.textContent=m;toast.className="toast show"+(err?" err":"");clearTimeout(notify.t);notify.t=setTimeout(function(){toast.className="toast"},3000)}
+<footer class="footer">
+  <strong>AfroNews</strong>
+  <span id="footerYear"></span>
+</footer>
 
-function show(v){
- var a=v==="admin";home.hidden=a;admin.hidden=!a;
- document.querySelectorAll(".nav").forEach(function(b){b.classList.toggle("active",b.dataset.view===v)});
- if(a)renderAdmin();else render();
- nav.classList.remove("open");window.scrollTo({top:0,behavior:"smooth"})
-}
-function filter(){
- var q=state.search.toLocaleLowerCase("pt").trim();
- return state.posts.filter(function(p){
-  return (state.category==="Todas"||p.category===state.category)&&(!q||(p.title+" "+p.text+" "+p.category).toLocaleLowerCase("pt").indexOf(q)!==-1)
- })
-}
-function render(){
- var arr=filter(),cat=state.category!=="Todas",q=!!state.search.trim();
- kicker.textContent=cat?"Categoria":q?"Pesquisa":"Últimas notícias";
- sectionTitle.textContent=cat?state.category:q?'Resultados para “'+state.search.trim()+'”':"Em destaque";
- clear.hidden=!cat&&!q;featured.innerHTML="";grid.innerHTML="";empty.hidden=arr.length>0;
- if(!arr.length)return;
- var p=arr[0],im=imgs(p)[0]||"";
- featured.innerHTML='<article class="feature">'+(im?'<img src="'+esc(im)+'" alt="">':"")+'<div class="featurebody"><span class="chip">'+esc(p.category)+'</span><h3>'+esc(p.title)+'</h3><p>'+esc(excerpt(p.text,220))+'</p><button class="read" data-open="'+esc(p.id)+'">Ler notícia</button></div></article>';
- grid.innerHTML=arr.slice(1).map(card).join("")
-}
-function card(p){
- var im=imgs(p)[0]||"";
- return '<article class="card"><div class="media">'+(im?'<img src="'+esc(im)+'" alt="">':"")+'</div><div class="body"><span class="chip">'+esc(p.category)+'</span><h3>'+esc(p.title)+'</h3><p>'+esc(excerpt(p.text,125))+'</p><div class="meta">'+esc(date(p.createdAt))+'</div></div><button data-open="'+esc(p.id)+'">Ler notícia →</button></article>'
-}
-function renderAdmin(){
- count.textContent=state.posts.length;
- if(!state.posts.length){posts.innerHTML='<div class="empty"><p>Nenhuma notícia publicada.</p></div>';return}
- posts.innerHTML=state.posts.map(function(p){return '<div class="postitem"><span class="chip">'+esc(p.category)+'</span><h3>'+esc(p.title)+'</h3><p>'+esc(date(p.createdAt))+'</p><div class="postactions"><button class="secondary" data-open="'+esc(p.id)+'">Ver</button><button class="danger" data-del="'+esc(p.id)+'">Apagar</button></div></div>'}).join("")
-}
-function embed(u){
- try{
-  var x=new URL(u),h=x.hostname.replace(/^www\./,""),parts=x.pathname.split("/").filter(Boolean),v;
-  if(h==="youtu.be"&&parts[0])return "https://www.youtube.com/embed/"+encodeURIComponent(parts[0]);
-  if(h==="youtube.com"||h==="m.youtube.com"){v=x.searchParams.get("v");if(v)return "https://www.youtube.com/embed/"+encodeURIComponent(v);if(["shorts","embed","live"].indexOf(parts[0])>=0&&parts[1])return "https://www.youtube.com/embed/"+encodeURIComponent(parts[1])}
-  if(h==="vimeo.com"||h==="player.vimeo.com"){v=parts.find(function(z){return /^\d+$/.test(z)});if(v)return "https://player.vimeo.com/video/"+v}
- }catch(e){}return null
-}
-function openArticle(postid){
- var p=state.posts.find(function(x){return x.id===postid});if(!p)return;
- var all=imgs(p),cover=all[0]||"";
- var gal=all.length?'<div class="gallery">'+all.map(function(u){return '<img src="'+esc(u)+'" alt="Imagem da notícia">'}).join("")+'</div>':"";
- var vids=(p.videoLinks||[]).length?'<div class="videos">'+p.videoLinks.map(function(u){var e=embed(u);return e?'<iframe class="video" src="'+esc(e)+'" title="Vídeo" loading="lazy" allowfullscreen></iframe>':'<a class="videolink" href="'+esc(u)+'" target="_blank" rel="noopener">Abrir vídeo: '+esc(u)+'</a>'}).join("")+'</div>':"";
- article.innerHTML='<header class="articlehero">'+(cover?'<img src="'+esc(cover)+'" alt="">':"")+'<div class="articlehead"><span class="chip">'+esc(p.category)+'</span><h1>'+esc(p.title)+'</h1><div>'+esc(date(p.createdAt))+'</div></div></header><div class="articlebody"><div class="articletext">'+esc(p.text)+'</div>'+gal+vids+'</div>';
- dialog.showModal()
-}
-function preview(){
- previews.innerHTML="";filestatus.textContent=state.files.length?state.files.length+" de 3 imagem(ns) selecionada(s).":"Nenhuma imagem selecionada.";
- state.files.forEach(function(f){var d=document.createElement("div"),im=document.createElement("img"),u=URL.createObjectURL(f);d.className="preview";im.src=u;im.alt=f.name;im.onload=function(){URL.revokeObjectURL(u)};d.appendChild(im);previews.appendChild(d)})
-}
-function resize(file){
- return new Promise(function(resolve,reject){
-  var r=new FileReader();r.onerror=function(){reject(new Error("read"))};r.onload=function(){var im=new Image();im.onerror=function(){reject(new Error("image"))};im.onload=function(){var ratio=Math.min(1,1200/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*ratio));c.height=Math.max(1,Math.round(im.height*ratio));c.getContext("2d").drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL("image/webp",.78))};im.src=r.result};r.readAsDataURL(file)
- })
-}
-function reset(){form.reset();state.files=[];preview()}
-
-document.getElementById("menu").onclick=function(){nav.classList.toggle("open")};
-document.addEventListener("click",function(e){
- var v=e.target.closest("[data-view]");if(v){e.preventDefault();if(v.dataset.view==="home"){state.category="Todas";state.search="";search.value=""}show(v.dataset.view);return}
- var c=e.target.closest("[data-cat]");if(c){state.category=c.dataset.cat;show("home");document.querySelectorAll(".nav").forEach(function(b){b.classList.toggle("active",b.dataset.cat===state.category)});return}
- var o=e.target.closest("[data-open]");if(o){openArticle(o.dataset.open);return}
- var d=e.target.closest("[data-del]");if(d){var p=state.posts.find(function(x){return x.id===d.dataset.del});if(p&&confirm('Apagar “'+p.title+'”?')){state.posts=state.posts.filter(function(x){return x.id!==d.dataset.del});save();renderAdmin();render();notify("Notícia apagada.")}}
-});
-search.oninput=function(){state.search=search.value;state.category="Todas";render()};
-clear.onclick=function(){state.category="Todas";state.search="";search.value="";render()};
-files.onchange=function(){var a=Array.from(files.files||[]).filter(function(f){return f.type.indexOf("image/")===0});state.files=a.slice(0,3);if(a.length>3)notify("O limite é 3 imagens do dispositivo. Foram consideradas apenas as primeiras 3.",true);preview()};
-document.getElementById("reset").onclick=reset;
-document.getElementById("close").onclick=function(){dialog.close()};
-form.onsubmit=async function(e){
- e.preventDefault();var t=title.value.trim(),tx=text.value.trim(),cat=category.value;
- if(!t||!tx){notify("Título e texto são obrigatórios.",true);(!t?title:text).focus();return}
- if(cats.indexOf(cat)<0){notify("Selecione uma categoria.",true);category.focus();return}
- publish.disabled=true;publish.textContent="A publicar...";
- try{
-  var local=await Promise.all(state.files.map(resize));
-  var p={id:id(),title:t,text:tx,category:cat,deviceImages:local,imageLinks:links(imagelinks.value),videoLinks:links(videolinks.value),createdAt:new Date().toISOString()};
-  state.posts.unshift(p);if(!save()){state.posts.shift();return}reset();renderAdmin();render();notify("Notícia publicada no AfroNews.")
- }catch(err){notify("Falha ao processar as imagens selecionadas.",true)}
- finally{publish.disabled=false;publish.textContent="Publicar notícia"}
-};
-render();renderAdmin();
-})();
-</script>
+<script type="module" src="js/public.js"></script>
 </body>
 </html>
