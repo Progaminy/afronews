@@ -24,7 +24,10 @@ const el = {
   toast: document.getElementById("toast")
 };
 
-document.getElementById("footerYear").textContent = "© " + new Date().getFullYear();
+document.getElementById("footerYear").textContent = "© " + new Date().getFullYear() + " AfroNews";
+document.getElementById("currentDate").textContent = new Intl.DateTimeFormat("pt-PT", {
+  weekday: "long", day: "2-digit", month: "long", year: "numeric"
+}).format(new Date());
 
 function esc(value) {
   return String(value ?? "")
@@ -49,7 +52,7 @@ function excerpt(text, limit) {
 function formatDate(value) {
   try {
     return new Intl.DateTimeFormat("pt-PT", {
-      day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit"
+      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
     }).format(new Date(value));
   } catch {
     return "";
@@ -70,6 +73,33 @@ function filteredPosts() {
   });
 }
 
+function mainFeature(post) {
+  const cover = imageList(post)[0] || "";
+  return `<article class="feature">
+    <div class="feature-media">${cover ? `<img src="${esc(cover)}" alt="">` : ""}</div>
+    <div class="feature-body">
+      <span class="chip">${esc(post.category)}</span>
+      <h2>${esc(post.title)}</h2>
+      <p>${esc(excerpt(post.body, 260))}</p>
+      <button class="read-btn" data-open="${esc(post.id)}" type="button">Ler notícia</button>
+      <div class="feature-meta">${esc(formatDate(post.created_at))}</div>
+    </div>
+  </article>`;
+}
+
+function leadSmall(post) {
+  const cover = imageList(post)[0] || "";
+  return `<article class="lead-small">
+    <div class="lead-small-media">${cover ? `<img src="${esc(cover)}" alt="">` : ""}</div>
+    <div>
+      <span class="chip">${esc(post.category)}</span>
+      <h3>${esc(post.title)}</h3>
+      <div class="meta">${esc(formatDate(post.created_at))}</div>
+      <button class="card-open" data-open="${esc(post.id)}" type="button">Ler</button>
+    </div>
+  </article>`;
+}
+
 function card(post) {
   const cover = imageList(post)[0] || "";
   return `<article class="news-card">
@@ -77,10 +107,10 @@ function card(post) {
     <div class="card-body">
       <span class="chip">${esc(post.category)}</span>
       <h3>${esc(post.title)}</h3>
-      <p>${esc(excerpt(post.body, 130))}</p>
+      <p>${esc(excerpt(post.body, 145))}</p>
       <div class="meta">${esc(formatDate(post.created_at))}</div>
     </div>
-    <button class="card-open" data-open="${esc(post.id)}" type="button">Ler notícia →</button>
+    <button class="card-open" data-open="${esc(post.id)}" type="button">Continuar a ler</button>
   </article>`;
 }
 
@@ -89,8 +119,8 @@ function render() {
   const hasFilter = state.category !== "Todas";
   const hasSearch = Boolean(state.search.trim());
 
-  el.kicker.textContent = hasFilter ? "Categoria" : hasSearch ? "Pesquisa" : "Últimas notícias";
-  el.title.textContent = hasFilter ? state.category : hasSearch ? `Resultados para “${state.search.trim()}”` : "Em destaque";
+  el.kicker.textContent = hasFilter ? "Categoria" : hasSearch ? "Pesquisa" : "Agora";
+  el.title.textContent = hasFilter ? state.category : hasSearch ? `Resultados para “${state.search.trim()}”` : "Últimas notícias";
   el.clear.hidden = !hasFilter && !hasSearch;
 
   el.featured.innerHTML = "";
@@ -100,19 +130,17 @@ function render() {
 
   if (!posts.length) return;
 
-  const first = posts[0];
-  const cover = imageList(first)[0] || "";
-  el.featured.innerHTML = `<article class="feature">
-    ${cover ? `<img src="${esc(cover)}" alt="">` : ""}
-    <div class="feature-body">
-      <span class="chip">${esc(first.category)}</span>
-      <h3>${esc(first.title)}</h3>
-      <p>${esc(excerpt(first.body, 230))}</p>
-      <button class="read-btn" data-open="${esc(first.id)}" type="button">Ler notícia</button>
-    </div>
-  </article>`;
+  const lead = posts[0];
+  const side = posts.slice(1, 3);
+  const remainder = posts.slice(3);
 
-  el.grid.innerHTML = posts.slice(1).map(card).join("");
+  el.featured.innerHTML =
+    mainFeature(lead) +
+    `<aside class="lead-stack">${side.length ? side.map(leadSmall).join("") : '<div class="lead-small"><div><span class="chip">AfroNews</span><h3>Mais notícias serão publicadas aqui.</h3></div></div>'}</aside>`;
+
+  el.grid.innerHTML = remainder.length
+    ? remainder.map(card).join("")
+    : posts.slice(1).map(card).join("");
 }
 
 function embedUrl(raw) {
@@ -145,8 +173,8 @@ function openArticle(id) {
 
   const images = imageList(post);
   const cover = images[0] || "";
-  const gallery = images.length
-    ? `<div class="gallery">${images.map((url) => `<img src="${esc(url)}" alt="Imagem da notícia">`).join("")}</div>`
+  const gallery = images.length > 1
+    ? `<div class="gallery">${images.slice(1).map((url) => `<img src="${esc(url)}" alt="Imagem da notícia">`).join("")}</div>`
     : "";
   const videos = Array.isArray(post.video_urls) ? post.video_urls.filter(safeUrl) : [];
   const videoHtml = videos.length
