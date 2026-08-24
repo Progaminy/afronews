@@ -7,29 +7,47 @@
   <title>AfroNews</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    :root{--fixed-footer-h:64px}
+    body{padding-bottom:var(--fixed-footer-h)}
     .site-header{position:sticky;top:0;z-index:90;background:rgba(247,243,235,.98);box-shadow:0 8px 24px rgba(0,0,0,.08);backdrop-filter:blur(12px)}
     .utility-inner{gap:18px}.utility-contact{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
     .utility-contact a,.utility-contact span{color:#f0f0f0;text-decoration:none;font-size:.68rem;font-weight:800;letter-spacing:.045em;white-space:nowrap}
-    .utility-contact a:hover{color:#ff5365}.masthead{min-height:96px;padding-top:14px;padding-bottom:12px}.wordmark{font-size:clamp(2.8rem,5vw,4.8rem)}
-    .masthead>p{margin-top:7px}.mast-search{bottom:24px}.category-bar{position:static}
-    .footer-inner{min-height:190px;align-items:flex-start;padding:32px 0}.footer-main{display:grid;gap:8px}.footer-social{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px}
-    .footer-social a{color:#fff;text-decoration:none;font-size:.82rem;font-weight:800}.footer-social a:hover{color:#e3293c}
-    .footer-credit{margin-top:18px!important;padding-top:14px;border-top:1px solid #333;color:#d8d8d8;font-family:var(--sans)!important;font-style:normal!important;font-size:.82rem}
-    .footer-credit strong{color:#fff}.footer-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;color:#aaa;font-size:.78rem}
+    .utility-contact a:hover{color:#ff5365}
+    .masthead{min-height:104px;padding:10px 230px 10px 16px;display:flex;align-items:center;justify-content:center}
+    .brand-lockup{display:flex;align-items:center;justify-content:center;gap:14px;min-width:0}
+    .brand-image{width:78px;height:78px;object-fit:contain;flex:0 0 auto;background:#fff;border:1px solid var(--line)}
+    .brand-copy{min-width:0}.brand-copy>p{margin:5px 0 0;color:var(--muted);font-family:var(--serif);font-size:.88rem;font-style:italic;text-align:center}
+    .wordmark{font-size:clamp(2.8rem,5vw,4.8rem)}.mast-search{bottom:28px}.category-bar{position:static}
     .related-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
     .related-links a{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:850;font-size:.82rem}
     .related-links a:hover{border-color:var(--red);color:var(--red)}
+
+    .footer{position:fixed;left:0;right:0;bottom:0;z-index:85;background:var(--black);border-top:3px solid var(--red);box-shadow:0 -8px 24px rgba(0,0,0,.16)}
+    .footer-inner{min-height:61px;padding:6px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .footer-main{display:flex;align-items:center;gap:16px;min-width:0;flex:1}.footer-wordmark{font-size:1.2rem;flex:0 0 auto}
+    .footer-main>p:not(.footer-credit){display:none}.footer-social{display:flex;align-items:center;flex-wrap:wrap;gap:7px 12px;margin:0}
+    .footer-social a{color:#fff;text-decoration:none;font-size:.72rem;font-weight:800;white-space:nowrap}.footer-social a:hover{color:#e3293c}
+    .footer-credit{margin:0!important;padding:0;border:0;color:#d8d8d8;font-family:var(--sans)!important;font-style:normal!important;font-size:.7rem;white-space:nowrap}
+    .footer-credit strong{color:#fff}.footer-meta{display:none}
+
     @media (max-width:760px){
+      :root{--fixed-footer-h:78px}
       .site-header{box-shadow:0 4px 14px rgba(0,0,0,.09)}
-      .utility-inner{min-height:38px}.utility-tagline,#currentDate{display:none}.utility-contact{width:100%;justify-content:center;gap:7px 10px;overflow-x:auto;flex-wrap:nowrap;padding:0 2px}
-      .utility-contact a{font-size:.63rem}.masthead{min-height:64px;padding:8px 16px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}.wordmark{font-size:2.25rem}.masthead>p{margin:2px 0 0;font-size:.75rem}.mast-search{display:none}
-      .category-inner{min-height:42px}.nav-btn{padding:12px 12px 11px;font-size:.72rem}.shell{width:min(100% - 20px,1240px);padding:24px 0 56px}.news-heading{margin-bottom:18px}.news-heading h1{font-size:2rem}
+      .utility-inner{min-height:38px;width:100%;padding:0 8px}.utility-tagline,#currentDate{display:none}
+      .utility-contact{width:100%;justify-content:flex-start;gap:7px 13px;overflow-x:auto;flex-wrap:nowrap;padding:0 2px;scrollbar-width:none}.utility-contact::-webkit-scrollbar{display:none}.utility-contact a{font-size:.63rem}
+      .masthead{min-height:68px;padding:6px 12px;justify-content:flex-start}.brand-lockup{justify-content:flex-start;gap:9px}.brand-image{width:52px;height:52px;border-radius:3px}
+      .brand-copy>p{margin:1px 0 0;text-align:left;font-size:.68rem}.wordmark{font-size:2rem}.mast-search{display:none}
+      .category-inner{min-height:40px}.nav-btn{padding:11px 11px 10px;font-size:.7rem}
+      .shell{width:min(100% - 20px,1240px);padding:22px 0 48px}.news-heading{margin-bottom:18px}.news-heading h1{font-size:2rem}
       .feature{display:block;min-height:0}.feature-media{min-height:0;background:#111}.feature-media img{width:100%;height:auto;min-height:0;max-height:64vh;object-fit:contain}.feature-body{padding:20px 18px 22px}.feature-body h2{font-size:2.05rem}
       .lead-zone{grid-template-columns:1fr;gap:18px}.lead-stack{display:grid;grid-template-rows:none}.lead-small{grid-template-columns:96px 1fr;gap:12px}.lead-small-media{width:96px;background:#111}.lead-small-media img{object-fit:contain}
       .news-grid{grid-template-columns:1fr;row-gap:24px}.news-card,.news-card:nth-child(3n+2),.news-card:nth-child(3n+3){border-left:0;padding-left:0}.card-media{aspect-ratio:auto;background:#111}.card-media img{width:100%;height:auto;max-height:58vh;object-fit:contain}
       .article-dialog{width:100%;max-height:100vh;height:100vh}.article-hero{min-height:0;display:block;padding:0;background:#111;color:#fff}.article-hero>img{position:static;width:100%;height:auto;max-height:68vh;object-fit:contain;opacity:1}.article-hero::after{display:none}.article-head{padding:20px 18px 22px;background:#111}.article-head h1{font-size:2.15rem}.article-body{padding:28px 18px 42px}.article-text{font-size:1.06rem;line-height:1.75}.gallery{grid-template-columns:1fr}.gallery img{height:auto;aspect-ratio:auto;max-height:70vh;object-fit:contain;background:#111}.dialog-close{position:fixed;right:8px;top:8px;margin:0}.related-links{display:grid;grid-template-columns:1fr}.related-links a{justify-content:center;min-height:46px}
-      .footer-inner{flex-direction:column;align-items:flex-start}.footer-meta{align-items:flex-start}
+      .footer-inner{min-height:75px;width:100%;padding:6px 10px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:3px 10px}
+      .footer-main{display:contents}.footer-wordmark{grid-column:1;grid-row:1;font-size:1rem}.footer-credit{grid-column:2;grid-row:1;align-self:center;font-size:.62rem}
+      .footer-social{grid-column:1/-1;grid-row:2;display:flex;justify-content:space-between;gap:5px;width:100%;overflow:hidden}.footer-social a{font-size:.64rem}
     }
+    @media (max-width:390px){.footer-credit{font-size:.58rem}.footer-social a{font-size:.6rem}.brand-image{width:48px;height:48px}.wordmark{font-size:1.8rem}}
   </style>
 </head>
 <body>
@@ -48,8 +66,13 @@
   </div>
 
   <div class="masthead">
-    <a class="wordmark" href="index.html" aria-label="AfroNews"><span>AFRO</span><strong>NEWS</strong></a>
-    <p>Informação sem fronteiras</p>
+    <div class="brand-lockup">
+      <img class="brand-image" src="assets/afronews-brand.jpg" alt="Imagem de identidade visual enviada pelo criador">
+      <div class="brand-copy">
+        <a class="wordmark" href="index.html" aria-label="AfroNews"><span>AFRO</span><strong>NEWS</strong></a>
+        <p>Informação sem fronteiras</p>
+      </div>
+    </div>
     <label class="mast-search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Pesquisar" autocomplete="off"></label>
   </div>
 
@@ -74,14 +97,19 @@
 <dialog id="articleDialog" class="article-dialog"><button id="dialogClose" class="dialog-close" type="button" aria-label="Fechar">×</button><article id="articleContent"></article></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<footer class="footer">
+<footer class="footer" aria-label="Rodapé fixo">
   <div class="footer-inner">
     <div class="footer-main">
-      <div class="footer-wordmark">AFRO<span>NEWS</span></div><p>África no centro. O mundo em perspectiva.</p>
-      <div class="footer-social" aria-label="Contactos e redes sociais"><a href="https://wa.me/25872599084" target="_blank" rel="noopener noreferrer">WhatsApp +258 72 599 084</a><a href="https://www.facebook.com/opiniaoafro" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.youtube.com/@MUSSAGINIKOZI-t4k" target="_blank" rel="noopener noreferrer">YouTube</a><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></div>
+      <div class="footer-wordmark">AFRO<span>NEWS</span></div>
+      <div class="footer-social" aria-label="Contactos e redes sociais">
+        <a href="https://wa.me/25872599084" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a href="https://www.facebook.com/opiniaoafro" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://www.youtube.com/@MUSSAGINIKOZI-t4k" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a>
+      </div>
       <p class="footer-credit">Criado por <strong>Pensador Sem Fronteiras</strong></p>
     </div>
-    <div class="footer-meta"><span id="footerYear"></span><span>AfroNews</span></div>
+    <div class="footer-meta"><span id="footerYear"></span></div>
   </div>
 </footer>
 <script type="module" src="js/public.js"></script>
