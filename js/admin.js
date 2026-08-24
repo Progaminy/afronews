@@ -20,6 +20,11 @@ const el = {
   loginEmail: document.getElementById("loginEmail"),
   loginPassword: document.getElementById("loginPassword"),
   loginButton: document.getElementById("loginButton"),
+  forgotPassword: document.getElementById("forgotPasswordButton"),
+  recoveryForm: document.getElementById("passwordRecoveryForm"),
+  newPassword: document.getElementById("newPassword"),
+  confirmPassword: document.getElementById("confirmPassword"),
+  savePassword: document.getElementById("savePasswordButton"),
   denied: document.getElementById("accessDenied"),
   logout: document.getElementById("logoutButton"),
   identity: document.getElementById("adminIdentity"),
@@ -82,6 +87,17 @@ function showLogin() {
   currentUser = null;
   el.adminView.hidden = true;
   el.authView.hidden = false;
+  el.loginForm.hidden = false;
+  el.recoveryForm.hidden = true;
+}
+
+function showPasswordReset() {
+  currentUser = null;
+  el.adminView.hidden = true;
+  el.authView.hidden = false;
+  el.loginForm.hidden = true;
+  el.recoveryForm.hidden = false;
+  el.newPassword.focus();
 }
 
 function showAdmin(user) {
@@ -153,6 +169,68 @@ el.loginForm.addEventListener("submit", async (event) => {
 
   el.loginButton.disabled = false;
   el.loginButton.textContent = "Entrar";
+});
+
+el.forgotPassword.addEventListener("click", async () => {
+  const email = el.loginEmail.value.trim();
+  if (!email) {
+    notify("Digite primeiro o e-mail da conta administrativa.", true);
+    el.loginEmail.focus();
+    return;
+  }
+
+  el.forgotPassword.disabled = true;
+  el.forgotPassword.textContent = "A enviar...";
+
+  const { error } = await db.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname
+  });
+
+  if (error) {
+    console.error(error);
+    notify(error.message || "Não foi possível enviar a recuperação.", true);
+  } else {
+    notify("Foi enviado um link para redefinir a palavra-passe. Veja o seu e-mail.");
+  }
+
+  el.forgotPassword.disabled = false;
+  el.forgotPassword.textContent = "Esqueci a palavra-passe";
+});
+
+el.recoveryForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const password = el.newPassword.value;
+  const confirmPassword = el.confirmPassword.value;
+
+  if (password.length < 8) {
+    notify("A nova palavra-passe deve ter pelo menos 8 caracteres.", true);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    notify("As duas palavras-passe não são iguais.", true);
+    return;
+  }
+
+  el.savePassword.disabled = true;
+  el.savePassword.textContent = "A guardar...";
+
+  const { data, error } = await db.auth.updateUser({ password });
+
+  if (error) {
+    console.error(error);
+    notify(error.message || "Não foi possível alterar a palavra-passe.", true);
+  } else {
+    notify("Palavra-passe alterada. A abrir o painel...");
+    el.newPassword.value = "";
+    el.confirmPassword.value = "";
+    const { data: sessionData } = await db.auth.getSession();
+    await authorize(sessionData?.session ?? (data?.user ? { user: data.user } : null));
+  }
+
+  el.savePassword.disabled = false;
+  el.savePassword.textContent = "Guardar nova palavra-passe";
 });
 
 el.logout.addEventListener("click", async () => {
@@ -363,6 +441,10 @@ el.list.addEventListener("click", (event) => {
 });
 
 db.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    showPasswordReset();
+    return;
+  }
   if (event === "SIGNED_OUT") showLogin();
   if (event === "SIGNED_IN" && session?.user && !currentUser) authorize(session);
 });
