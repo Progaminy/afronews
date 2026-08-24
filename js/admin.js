@@ -37,6 +37,9 @@ const el = {
   previews: document.getElementById("imagePreviews"),
   imageLinks: document.getElementById("imageLinks"),
   videoLinks: document.getElementById("videoLinks"),
+  youtubeLink: document.getElementById("youtubeLink"),
+  facebookLink: document.getElementById("facebookLink"),
+  tiktokLink: document.getElementById("tiktokLink"),
   publish: document.getElementById("publishButton"),
   clear: document.getElementById("clearButton"),
   count: document.getElementById("postCount"),
@@ -64,6 +67,13 @@ function parseLinks(value) {
     .map((item) => item.trim())
     .filter(Boolean)
     .filter(safeUrl);
+}
+
+function readOptionalUrl(input, label) {
+  const value = input.value.trim();
+  if (!value) return "";
+  if (!safeUrl(value)) throw new Error(`${label}: coloque um link válido começando por http:// ou https://.`);
+  return value;
 }
 
 function formatDate(value) {
@@ -199,7 +209,6 @@ el.forgotPassword.addEventListener("click", async () => {
 
 el.recoveryForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-
   const password = el.newPassword.value;
   const confirmPassword = el.confirmPassword.value;
 
@@ -207,7 +216,6 @@ el.recoveryForm.addEventListener("submit", async (event) => {
     notify("A nova palavra-passe deve ter pelo menos 8 caracteres.", true);
     return;
   }
-
   if (password !== confirmPassword) {
     notify("As duas palavras-passe não são iguais.", true);
     return;
@@ -215,7 +223,6 @@ el.recoveryForm.addEventListener("submit", async (event) => {
 
   el.savePassword.disabled = true;
   el.savePassword.textContent = "A guardar...";
-
   const { data, error } = await db.auth.updateUser({ password });
 
   if (error) {
@@ -242,10 +249,7 @@ el.logout.addEventListener("click", async () => {
 el.files.addEventListener("change", () => {
   const images = Array.from(el.files.files || []).filter((file) => file.type.startsWith("image/"));
   selectedFiles = images.slice(0, 3);
-
-  if (images.length > 3) {
-    notify("O limite é 3 imagens do dispositivo. As restantes foram ignoradas.", true);
-  }
+  if (images.length > 3) notify("O limite é 3 imagens do dispositivo. As restantes foram ignoradas.", true);
   renderPreviews();
 });
 
@@ -279,29 +283,23 @@ el.clear.addEventListener("click", resetForm);
 async function uploadDeviceImages() {
   if (!selectedFiles.length) return [];
   if (!currentUser) throw new Error("Sessão administrativa inválida.");
-
   const urls = [];
 
   for (const file of selectedFiles) {
     const extension = (file.name.split(".").pop() || "jpg")
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "") || "jpg";
+      .toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
     const path = currentUser.id + "/" + crypto.randomUUID() + "." + extension;
 
-    const { error: uploadError } = await db.storage
-      .from(MEDIA_BUCKET)
-      .upload(path, file, {
-        contentType: file.type || "image/jpeg",
-        cacheControl: "3600",
-        upsert: false
-      });
-
+    const { error: uploadError } = await db.storage.from(MEDIA_BUCKET).upload(path, file, {
+      contentType: file.type || "image/jpeg",
+      cacheControl: "3600",
+      upsert: false
+    });
     if (uploadError) throw uploadError;
 
     const { data } = db.storage.from(MEDIA_BUCKET).getPublicUrl(path);
     if (data?.publicUrl) urls.push(data.publicUrl);
   }
-
   return urls;
 }
 
@@ -323,7 +321,6 @@ el.form.addEventListener("submit", async (event) => {
     (!title ? el.title : el.body).focus();
     return;
   }
-
   if (!categories.includes(category)) {
     notify("Selecione uma categoria.", true);
     el.category.focus();
@@ -337,6 +334,11 @@ el.form.addEventListener("submit", async (event) => {
     const uploadedUrls = await uploadDeviceImages();
     const linkedImages = parseLinks(el.imageLinks.value);
     const videoUrls = parseLinks(el.videoLinks.value);
+    const socialLinks = {
+      youtube: readOptionalUrl(el.youtubeLink, "YouTube"),
+      facebook: readOptionalUrl(el.facebookLink, "Facebook"),
+      tiktok: readOptionalUrl(el.tiktokLink, "TikTok")
+    };
 
     const { error } = await db.from(NEWS_TABLE).insert({
       title,
@@ -344,12 +346,12 @@ el.form.addEventListener("submit", async (event) => {
       category,
       image_urls: [...uploadedUrls, ...linkedImages],
       video_urls: videoUrls,
+      social_links: socialLinks,
       status: "published",
       created_by: currentUser.id
     });
 
     if (error) throw error;
-
     resetForm();
     await loadPosts();
     notify("Notícia publicada no AfroNews.");
@@ -373,14 +375,12 @@ async function loadPosts() {
     notify("Não foi possível carregar as publicações.", true);
     return;
   }
-
   posts = data || [];
   renderPosts();
 }
 
 function renderPosts() {
   el.count.textContent = posts.length;
-
   if (!posts.length) {
     el.list.innerHTML = '<div class="empty-state"><p>Nenhuma notícia publicada.</p></div>';
     return;
@@ -412,12 +412,10 @@ function storagePathFromPublicUrl(url) {
 
 async function deletePost(id) {
   const post = posts.find((item) => item.id === id);
-  if (!post) return;
-  if (!confirm('Apagar “' + post.title + '”?')) return;
+  if (!post || !confirm('Apagar “' + post.title + '”?')) return;
 
   const storedPaths = (Array.isArray(post.image_urls) ? post.image_urls : [])
-    .map(storagePathFromPublicUrl)
-    .filter(Boolean);
+    .map(storagePathFromPublicUrl).filter(Boolean);
 
   if (storedPaths.length) {
     const { error: storageError } = await db.storage.from(MEDIA_BUCKET).remove(storedPaths);
@@ -430,7 +428,6 @@ async function deletePost(id) {
     notify("Não foi possível apagar a notícia.", true);
     return;
   }
-
   await loadPosts();
   notify("Notícia apagada.");
 }
