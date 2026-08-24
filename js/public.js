@@ -2,6 +2,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, NEWS_TABLE } from "./config.js";
 
 const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const COMMENTS_TABLE = "afronews_comments";
+const LIKES_TABLE = "afronews_likes";
 const state = { posts: [], category: "Todas", search: "" };
 
 const el = {
@@ -63,6 +65,58 @@ function imageList(post) {
   return Array.isArray(post.image_urls) ? post.image_urls.filter(safeUrl) : [];
 }
 
+function countValue(value) {
+  const number = Number(value || 0);
+  return Number.isFinite(number) && number >= 0 ? number : 0;
+}
+
+function storageGet(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+
+function storageSet(key, value) {
+  try { localStorage.setItem(key, value); } catch {}
+}
+
+function makeVisitorId() {
+  if (crypto?.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
+    const random = Math.random() * 16 | 0;
+    const value = char === "x" ? random : (random & 0x3 | 0x8);
+    return value.toString(16);
+  });
+}
+
+function getVisitorId() {
+  const key = "afronewsVisitorId";
+  const current = storageGet(key);
+  if (current && /^[0-9a-f-]{36}$/i.test(current)) return current;
+  const created = makeVisitorId();
+  storageSet(key, created);
+  return created;
+}
+
+const visitorId = getVisitorId();
+
+function likedKey(postId) {
+  return "afronewsLiked:" + postId;
+}
+
+function wasLiked(postId) {
+  return storageGet(likedKey(postId)) === "1";
+}
+
+function rememberLiked(postId) {
+  storageSet(likedKey(postId), "1");
+}
+
+function engagementMini(post) {
+  return `<div class="engagement-mini" aria-label="Interações">
+    <span>♥ ${countValue(post.like_count)}</span>
+    <span>💬 ${countValue(post.comment_count)}</span>
+  </div>`;
+}
+
 function filteredPosts() {
   const q = state.search.toLocaleLowerCase("pt").trim();
   return state.posts.filter((post) => {
@@ -83,6 +137,7 @@ function mainFeature(post) {
       <p>${esc(excerpt(post.body, 260))}</p>
       <button class="read-btn" data-open="${esc(post.id)}" type="button">Ler notícia</button>
       <div class="feature-meta">${esc(formatDate(post.created_at))}</div>
+      ${engagementMini(post)}
     </div>
   </article>`;
 }
@@ -95,6 +150,7 @@ function leadSmall(post) {
       <span class="chip">${esc(post.category)}</span>
       <h3>${esc(post.title)}</h3>
       <div class="meta">${esc(formatDate(post.created_at))}</div>
+      ${engagementMini(post)}
       <button class="card-open" data-open="${esc(post.id)}" type="button">Ler</button>
     </div>
   </article>`;
@@ -109,6 +165,7 @@ function card(post) {
       <h3>${esc(post.title)}</h3>
       <p>${esc(excerpt(post.body, 145))}</p>
       <div class="meta">${esc(formatDate(post.created_at))}</div>
+      ${engagementMini(post)}
     </div>
     <button class="card-open" data-open="${esc(post.id)}" type="button">Continuar a ler</button>
   </article>`;
@@ -171,6 +228,168 @@ function relatedLinksHtml(post) {
   </div>`;
 }
 
+function interactionHtml(post) {
+  const liked = wasLiked(post.id);
+  const savedName = storageGet("afronewsCommentName") || "";
+  const likes = countValue(post.like_count);
+  const comments = countValue(post.comment_count);
+
+  return `<section class="article-engagement" data-engagement-post="${esc(post.id)}">
+    <div class="engagement-summary">
+      <button class="like-btn${liked ? " liked" : ""}" data-like="${esc(post.id)}" type="button" ${liked ? "disabled" : ""}>
+        <span aria-hidden="true">♥</span>
+        <span>${liked ? "Gostou" : "Gostei"}</span>
+        <b data-like-count>${likes}</b>
+      </button>
+      <span class="comment-total">💬 <b data-comment-count>${comments}</b> comentário(s)</span>
+    </div>
+
+    <div class="comments-block">
+      <h2>Comentários</h2>
+      <form class="comment-form" data-comment-form="${esc(post.id)}">
+        <input name="author" type="text" minlength="2" maxlength="60" value="${esc(savedName)}" placeholder="Seu nome" autocomplete="name" required>
+        <textarea name="body" minlength="1" maxlength="1000" placeholder="Escreva seu comentário..." required></textarea>
+        <button type="submit">Publicar comentário</button>
+      </form>
+      <div class="comments-list" data-comments-list="${esc(post.id)}" aria-live="polite">
+        <p class="comments-empty">A carregar comentários...</p>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderComments(postId, comments) {
+  const list = document.querySelector(`[data-comments-list="${postId}"]`);
+  if (!list) return;
+
+  if (!comments.length) {
+    list.innerHTML = '<p class="comments-empty">Seja o primeiro a comentar esta notícia.</p>';
+    return;
+  }
+
+  list.innerHTML = comments.map((comment) => `
+    <article class="comment-item">
+      <div class="comment-head">
+        <strong class="comment-author">${esc(comment.author_name)}</strong>
+        <span class="comment-date">${esc(formatDate(comment.created_at))}</span>
+      </div>
+      <p class="comment-body">${esc(comment.body)}</p>
+    </article>
+  `).join("");
+}
+
+async function loadComments(postId) {
+  const list = document.querySelector(`[data-comments-list="${postId}"]`);
+  if (!list) return;
+
+  const { data, error } = await db
+    .from(COMMENTS_TABLE)
+    .select("id,author_name,body,created_at")
+    .eq("post_id", postId)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error(error);
+    list.innerHTML = '<p class="comments-empty">Não foi possível carregar os comentários.</p>';
+    return;
+  }
+
+  renderComments(postId, data || []);
+}
+
+function updateArticleCounts(post) {
+  const wrap = document.querySelector(`[data-engagement-post="${post.id}"]`);
+  if (!wrap) return;
+  const likeCount = wrap.querySelector("[data-like-count]");
+  const commentCount = wrap.querySelector("[data-comment-count]");
+  if (likeCount) likeCount.textContent = countValue(post.like_count);
+  if (commentCount) commentCount.textContent = countValue(post.comment_count);
+}
+
+async function handleLike(button) {
+  const postId = button.dataset.like;
+  const post = state.posts.find((item) => item.id === postId);
+  if (!post || wasLiked(postId)) return;
+
+  button.disabled = true;
+  button.textContent = "A registar...";
+
+  const { error } = await db.from(LIKES_TABLE).insert({ post_id: postId, visitor_id: visitorId });
+
+  if (error && error.code !== "23505") {
+    console.error(error);
+    button.disabled = false;
+    button.innerHTML = `<span aria-hidden="true">♥</span><span>Gostei</span><b data-like-count>${countValue(post.like_count)}</b>`;
+    notify("Não foi possível registar o like.", true);
+    return;
+  }
+
+  rememberLiked(postId);
+  if (!error) post.like_count = countValue(post.like_count) + 1;
+  button.classList.add("liked");
+  button.disabled = true;
+  button.innerHTML = `<span aria-hidden="true">♥</span><span>Gostou</span><b data-like-count>${countValue(post.like_count)}</b>`;
+  updateArticleCounts(post);
+  render();
+}
+
+async function handleCommentSubmit(form) {
+  const postId = form.dataset.commentForm;
+  const post = state.posts.find((item) => item.id === postId);
+  if (!post) return;
+
+  const authorInput = form.querySelector('[name="author"]');
+  const bodyInput = form.querySelector('[name="body"]');
+  const submit = form.querySelector('button[type="submit"]');
+  const author = authorInput.value.trim();
+  const body = bodyInput.value.trim();
+
+  if (author.length < 2 || author.length > 60) {
+    notify("Digite um nome entre 2 e 60 caracteres.", true);
+    authorInput.focus();
+    return;
+  }
+  if (!body || body.length > 1000) {
+    notify("O comentário deve ter entre 1 e 1000 caracteres.", true);
+    bodyInput.focus();
+    return;
+  }
+
+  submit.disabled = true;
+  submit.textContent = "A publicar...";
+
+  const { error } = await db.from(COMMENTS_TABLE).insert({
+    post_id: postId,
+    author_name: author,
+    body
+  });
+
+  submit.disabled = false;
+  submit.textContent = "Publicar comentário";
+
+  if (error) {
+    console.error(error);
+    notify("Não foi possível publicar o comentário.", true);
+    return;
+  }
+
+  storageSet("afronewsCommentName", author);
+  bodyInput.value = "";
+  post.comment_count = countValue(post.comment_count) + 1;
+  updateArticleCounts(post);
+  render();
+  await loadComments(postId);
+  notify("Comentário publicado.");
+}
+
+function notify(message, error = false) {
+  el.toast.textContent = message;
+  el.toast.className = "toast show" + (error ? " error" : "");
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => { el.toast.className = "toast"; }, 3200);
+}
+
 function openArticle(id) {
   const post = state.posts.find((item) => item.id === id);
   if (!post) return;
@@ -204,8 +423,10 @@ function openArticle(id) {
       ${gallery}
       ${videoHtml}
       ${relatedLinksHtml(post)}
+      ${interactionHtml(post)}
     </div>`;
   el.dialog.showModal();
+  loadComments(id);
 }
 
 async function loadNews() {
@@ -216,7 +437,7 @@ async function loadNews() {
 
   const { data, error } = await db
     .from(NEWS_TABLE)
-    .select("id,title,body,category,image_urls,video_urls,social_links,created_at")
+    .select("id,title,body,category,image_urls,video_urls,social_links,like_count,comment_count,created_at")
     .eq("status", "published")
     .order("created_at", { ascending: false });
 
@@ -245,8 +466,21 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const likeButton = event.target.closest("[data-like]");
+  if (likeButton) {
+    handleLike(likeButton);
+    return;
+  }
+
   const openButton = event.target.closest("[data-open]");
   if (openButton) openArticle(openButton.dataset.open);
+});
+
+document.addEventListener("submit", (event) => {
+  const form = event.target.closest("[data-comment-form]");
+  if (!form) return;
+  event.preventDefault();
+  handleCommentSubmit(form);
 });
 
 el.search.addEventListener("input", () => {
