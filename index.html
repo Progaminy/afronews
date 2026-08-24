@@ -22,6 +22,27 @@
     .related-links a{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid var(--ink);color:var(--ink);text-decoration:none;font-weight:850;font-size:.82rem}
     .related-links a:hover{border-color:var(--red);color:var(--red)}
 
+    .engagement-mini{display:flex;align-items:center;gap:12px;margin-top:10px;color:#777;font-size:.76rem;font-weight:800}
+    .article-engagement{margin-top:38px;padding-top:24px;border-top:2px solid var(--ink)}
+    .engagement-summary{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .like-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 15px;border:1px solid var(--ink);background:#fff;color:var(--ink);font-weight:900}
+    .like-btn:hover{border-color:var(--red);color:var(--red)}
+    .like-btn.liked,.like-btn:disabled{border-color:var(--red);background:var(--red);color:#fff;cursor:default;opacity:1}
+    .comment-total{font-size:.88rem;font-weight:800;color:var(--muted)}
+    .comments-block{margin-top:28px}.comments-block h2{margin:0 0 14px;font:700 1.7rem var(--serif)}
+    .comment-form{display:grid;gap:10px;padding:16px;background:#f4efe6;border:1px solid var(--line)}
+    .comment-form input,.comment-form textarea{width:100%;padding:12px 13px;border:1px solid #bfb8ad;background:#fff;color:var(--ink);outline:0;font:inherit}
+    .comment-form textarea{min-height:110px;resize:vertical;line-height:1.5}
+    .comment-form input:focus,.comment-form textarea:focus{border-color:var(--red);box-shadow:0 0 0 2px #b3122412}
+    .comment-form button{justify-self:start;min-height:42px;padding:9px 16px;border:1px solid var(--red);background:var(--red);color:#fff;font-weight:900}
+    .comment-form button:disabled{opacity:.65;cursor:wait}
+    .comments-list{display:grid;gap:0;margin-top:18px;border-top:1px solid var(--ink)}
+    .comment-item{padding:16px 0;border-bottom:1px solid var(--line)}
+    .comment-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px}
+    .comment-author{font-weight:900}.comment-date{color:#8b857d;font-size:.72rem;white-space:nowrap}
+    .comment-body{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:400 .98rem/1.58 var(--serif)}
+    .comments-empty{padding:18px 0;color:var(--muted);font-size:.9rem}
+
     .footer{position:fixed;left:0;right:0;bottom:0;z-index:85;background:var(--black);border-top:3px solid var(--red);box-shadow:0 -8px 24px rgba(0,0,0,.16)}
     .footer-inner{min-height:61px;padding:6px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
     .footer-main{display:flex;align-items:center;gap:16px;min-width:0;flex:1}.footer-wordmark{font-size:1.2rem;flex:0 0 auto}
@@ -43,6 +64,7 @@
       .lead-zone{grid-template-columns:1fr;gap:18px}.lead-stack{display:grid;grid-template-rows:none}.lead-small{grid-template-columns:96px 1fr;gap:12px}.lead-small-media{width:96px;background:#111}.lead-small-media img{object-fit:contain}
       .news-grid{grid-template-columns:1fr;row-gap:24px}.news-card,.news-card:nth-child(3n+2),.news-card:nth-child(3n+3){border-left:0;padding-left:0}.card-media{aspect-ratio:auto;background:#111}.card-media img{width:100%;height:auto;max-height:58vh;object-fit:contain}
       .article-dialog{width:100%;max-height:100vh;height:100vh}.article-hero{min-height:0;display:block;padding:0;background:#111;color:#fff}.article-hero>img{position:static;width:100%;height:auto;max-height:68vh;object-fit:contain;opacity:1}.article-hero::after{display:none}.article-head{padding:20px 18px 22px;background:#111}.article-head h1{font-size:2.15rem}.article-body{padding:28px 18px 42px}.article-text{font-size:1.06rem;line-height:1.75}.gallery{grid-template-columns:1fr}.gallery img{height:auto;aspect-ratio:auto;max-height:70vh;object-fit:contain;background:#111}.dialog-close{position:fixed;right:8px;top:8px;margin:0}.related-links{display:grid;grid-template-columns:1fr}.related-links a{justify-content:center;min-height:46px}
+      .article-engagement{margin-top:30px;padding-top:20px}.engagement-summary{display:grid;grid-template-columns:1fr;gap:10px}.like-btn{width:100%;justify-content:center;min-height:48px}.comment-total{text-align:center}.comments-block{margin-top:24px}.comments-block h2{font-size:1.5rem}.comment-form{padding:13px}.comment-form input,.comment-form textarea{font-size:16px}.comment-form button{width:100%;justify-self:stretch;min-height:46px}.comment-head{align-items:flex-start;flex-direction:column;gap:3px}.comment-date{white-space:normal}
       .footer-inner{min-height:75px;width:100%;padding:6px 10px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:3px 10px}
       .footer-main{display:contents}.footer-wordmark{grid-column:1;grid-row:1;font-size:1rem}.footer-credit{grid-column:2;grid-row:1;align-self:center;font-size:.62rem}
       .footer-social{grid-column:1/-1;grid-row:2;display:flex;justify-content:space-between;gap:5px;width:100%;overflow:hidden}.footer-social a{font-size:.64rem}
