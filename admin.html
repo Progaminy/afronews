@@ -31,6 +31,20 @@
           <input id="loginPassword" type="password" autocomplete="current-password" required>
         </label>
         <button id="loginButton" class="primary-btn" type="submit">Entrar</button>
+        <button id="forgotPasswordButton" class="secondary-btn" type="button" style="width:100%;margin-top:10px">Esqueci a palavra-passe</button>
+      </form>
+
+      <form id="passwordRecoveryForm" hidden>
+        <p>Defina uma nova palavra-passe para esta conta administrativa.</p>
+        <label class="field">
+          <span>Nova palavra-passe</span>
+          <input id="newPassword" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <label class="field">
+          <span>Confirmar palavra-passe</span>
+          <input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button id="savePasswordButton" class="primary-btn" type="submit">Guardar nova palavra-passe</button>
       </form>
 
       <div id="accessDenied" class="access-denied" hidden>
