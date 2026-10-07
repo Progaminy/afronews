@@ -5,8 +5,8 @@
   --muted:#6e6a64;
   --line:#cfc8bd;
   --soft-line:#e5ded3;
-  --red:#b31224;
-  --red-dark:#870d1a;
+  --red:#f2c300;
+  --red-dark:#b38f00;
   --black:#090909;
   --serif:Georgia,"Times New Roman",serif;
   --sans:Inter,Arial,Helvetica,sans-serif;
@@ -117,7 +117,7 @@ img{max-width:100%;display:block}
 .footer{background:var(--black);color:#aaa;border-top:6px solid var(--red)}
 .footer-inner{min-height:150px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .footer-wordmark{color:#fff;font:900 2rem Arial Black,Impact,var(--sans);letter-spacing:-.06em}
-.footer-wordmark span{color:#e3293c}
+.footer-wordmark span{color:#f2c300}
 .footer p{margin:7px 0 0;font-family:var(--serif);font-style:italic}
 
 /* ADMIN */
@@ -141,7 +141,7 @@ img{max-width:100%;display:block}
 .field b{color:var(--red)}
 .field input,.field select,.field textarea{width:100%;padding:13px 14px;border:1px solid #cfc8bd;border-radius:0;background:#fff;outline:0}
 .field textarea{resize:vertical;line-height:1.55}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 2px #b3122414}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 2px #f2c30014}
 .upload-box{min-height:145px;display:grid;place-items:center;align-content:center;gap:5px;border:1px dashed #8d877f;background:#f7f3eb;text-align:center}
 .upload-box input{display:none}
 .upload-plus{font-size:2rem;color:var(--red)}
