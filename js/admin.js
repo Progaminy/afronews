@@ -163,7 +163,7 @@ async function authorize(session) {
   }
 
   showAdmin(user);
-  await loadPosts();
+  await Promise.all([loadPosts(), loadSiteSettings()]);
   return true;
 }
 
