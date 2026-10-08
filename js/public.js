@@ -1,5 +1,5 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/+esm";
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, NEWS_TABLE } from "./config.js";
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, NEWS_TABLE, SETTINGS_TABLE } from "./config.js";
 
 const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const COMMENTS_TABLE = "afronews_comments";
@@ -30,6 +30,76 @@ document.getElementById("footerYear").textContent = "© " + new Date().getFullYe
 document.getElementById("currentDate").textContent = new Intl.DateTimeFormat("pt-PT", {
   weekday: "long", day: "2-digit", month: "long", year: "numeric"
 }).format(new Date());
+
+
+function validColor(value) {
+  return /^#[0-9a-f]{6}$/i.test(String(value || ""));
+}
+
+function darkenHex(hex, amount = 0.28) {
+  const value = String(hex).replace("#", "");
+  if (value.length !== 6) return "#9f8200";
+  const rgb = [0, 2, 4].map((index) => parseInt(value.slice(index, index + 2), 16));
+  return "#" + rgb.map((channel) => Math.max(0, Math.round(channel * (1 - amount))).toString(16).padStart(2, "0")).join("");
+}
+
+function whatsappUrl(number) {
+  const digits = String(number || "").replace(/[^0-9]/g, "");
+  return digits ? "https://wa.me/" + digits : "";
+}
+
+function applySiteSettings(settings) {
+  const primary = validColor(settings?.primary_color) ? settings.primary_color : "#f2c300";
+  document.documentElement.style.setProperty("--red", primary);
+  document.documentElement.style.setProperty("--red-dark", darkenHex(primary));
+
+  const profile = document.querySelector(".brand-image");
+  if (profile && safeUrl(settings?.profile_image_url)) {
+    profile.src = settings.profile_image_url;
+  }
+
+  const whatsapp = whatsappUrl(settings?.whatsapp_number);
+  const facebook = safeUrl(settings?.facebook_url) ? settings.facebook_url : "";
+  const youtube = safeUrl(settings?.youtube_url) ? settings.youtube_url : "";
+  const tiktok = safeUrl(settings?.tiktok_url) ? settings.tiktok_url : "";
+  const values = [whatsapp, facebook, youtube, tiktok];
+
+  document.querySelectorAll(".utility-contact a").forEach((link, index) => {
+    const value = values[index];
+    if (!value) {
+      link.hidden = true;
+      return;
+    }
+    link.hidden = false;
+    link.href = value;
+  });
+
+  document.querySelectorAll(".footer-social a").forEach((link, index) => {
+    const value = values[index];
+    if (!value) {
+      link.hidden = true;
+      return;
+    }
+    link.hidden = false;
+    link.href = value;
+  });
+}
+
+async function loadSiteSettings() {
+  const { data, error } = await db
+    .from(SETTINGS_TABLE)
+    .select("primary_color,profile_image_url,whatsapp_number,facebook_url,youtube_url,tiktok_url")
+    .eq("id", true)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("Configurações do portal indisponíveis:", error);
+    applySiteSettings(null);
+    return;
+  }
+
+  applySiteSettings(data);
+}
 
 function esc(value) {
   return String(value ?? "")
@@ -501,4 +571,4 @@ el.clear.addEventListener("click", () => {
 el.retry.addEventListener("click", loadNews);
 el.close.addEventListener("click", () => el.dialog.close());
 
-loadNews();
+loadSiteSettings().finally(loadNews);
