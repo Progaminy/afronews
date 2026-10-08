@@ -4,7 +4,8 @@ import {
   SUPABASE_PUBLISHABLE_KEY,
   NEWS_TABLE,
   ADMIN_TABLE,
-  MEDIA_BUCKET
+  MEDIA_BUCKET,
+  SETTINGS_TABLE
 } from "./config.js";
 
 const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
@@ -12,6 +13,8 @@ const categories = ["África", "Europa", "América", "Rússia", "Ásia", "Oceani
 let currentUser = null;
 let selectedFiles = [];
 let posts = [];
+let selectedProfileFile = null;
+let siteSettings = null;
 
 const el = {
   authView: document.getElementById("authView"),
@@ -44,7 +47,18 @@ const el = {
   clear: document.getElementById("clearButton"),
   count: document.getElementById("postCount"),
   list: document.getElementById("postList"),
-  toast: document.getElementById("toast")
+  toast: document.getElementById("toast"),
+  settingsForm: document.getElementById("settingsForm"),
+  primaryColor: document.getElementById("primaryColor"),
+  colorPreview: document.getElementById("colorPreview"),
+  profileImage: document.getElementById("profileImage"),
+  profileImageStatus: document.getElementById("profileImageStatus"),
+  profilePreview: document.getElementById("profilePreview"),
+  whatsappNumber: document.getElementById("whatsappNumber"),
+  siteFacebook: document.getElementById("siteFacebook"),
+  siteYoutube: document.getElementById("siteYoutube"),
+  siteTiktok: document.getElementById("siteTiktok"),
+  saveSettings: document.getElementById("saveSettingsButton")
 };
 
 function esc(value) {
@@ -361,6 +375,169 @@ el.form.addEventListener("submit", async (event) => {
   } finally {
     el.publish.disabled = false;
     el.publish.textContent = "Publicar notícia";
+  }
+});
+
+
+function normalizeWhatsapp(value) {
+  return String(value || "").replace(/[^0-9]/g, "");
+}
+
+function validColor(value) {
+  return /^#[0-9a-f]{6}$/i.test(value);
+}
+
+function renderSettingsPreview() {
+  const color = validColor(el.primaryColor.value) ? el.primaryColor.value : "#f2c300";
+  el.colorPreview.style.background = color;
+  el.colorPreview.style.borderColor = color;
+}
+
+function renderProfilePreview(url) {
+  el.profilePreview.innerHTML = url && safeUrl(url)
+    ? `<img src="${esc(url)}" alt="Foto atual da página">`
+    : '<p class="help">Nenhuma foto configurada.</p>';
+}
+
+async function loadSiteSettings() {
+  if (!el.settingsForm) return;
+  const { data, error } = await db
+    .from(SETTINGS_TABLE)
+    .select("id,primary_color,profile_image_url,whatsapp_number,facebook_url,youtube_url,tiktok_url")
+    .eq("id", true)
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    notify("Não foi possível carregar as configurações do portal.", true);
+    return;
+  }
+
+  siteSettings = data || {
+    id: true,
+    primary_color: "#f2c300",
+    profile_image_url: "",
+    whatsapp_number: "",
+    facebook_url: "",
+    youtube_url: "",
+    tiktok_url: ""
+  };
+
+  el.primaryColor.value = validColor(siteSettings.primary_color) ? siteSettings.primary_color : "#f2c300";
+  el.whatsappNumber.value = siteSettings.whatsapp_number || "";
+  el.siteFacebook.value = siteSettings.facebook_url || "";
+  el.siteYoutube.value = siteSettings.youtube_url || "";
+  el.siteTiktok.value = siteSettings.tiktok_url || "";
+  el.profileImageStatus.textContent = siteSettings.profile_image_url
+    ? "Foto atual carregada. Escolha outra apenas se quiser substituí-la."
+    : "Nenhuma foto configurada.";
+  renderProfilePreview(siteSettings.profile_image_url);
+  renderSettingsPreview();
+}
+
+el.primaryColor?.addEventListener("input", renderSettingsPreview);
+
+el.profileImage?.addEventListener("change", () => {
+  selectedProfileFile = el.profileImage.files?.[0] || null;
+  if (!selectedProfileFile) {
+    el.profileImageStatus.textContent = siteSettings?.profile_image_url
+      ? "Foto atual carregada."
+      : "Nenhuma foto configurada.";
+    return;
+  }
+
+  el.profileImageStatus.textContent = selectedProfileFile.name;
+  const objectUrl = URL.createObjectURL(selectedProfileFile);
+  el.profilePreview.innerHTML = `<img src="${objectUrl}" alt="Pré-visualização da nova foto">`;
+  el.profilePreview.querySelector("img").onload = () => URL.revokeObjectURL(objectUrl);
+});
+
+async function uploadProfileImage() {
+  if (!selectedProfileFile) return siteSettings?.profile_image_url || "";
+  if (!currentUser) throw new Error("Sessão administrativa inválida.");
+
+  const extension = (selectedProfileFile.name.split(".").pop() || "jpg")
+    .toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const path = "site-settings/profile-" + crypto.randomUUID() + "." + extension;
+
+  const { error } = await db.storage.from(MEDIA_BUCKET).upload(path, selectedProfileFile, {
+    contentType: selectedProfileFile.type || "image/jpeg",
+    cacheControl: "3600",
+    upsert: false
+  });
+  if (error) throw error;
+
+  const { data } = db.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+  return data?.publicUrl || "";
+}
+
+el.settingsForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!currentUser) {
+    notify("Sessão expirada. Entre novamente.", true);
+    showLogin();
+    return;
+  }
+
+  const primaryColor = el.primaryColor.value.trim().toLowerCase();
+  if (!validColor(primaryColor)) {
+    notify("Escolha uma cor principal válida.", true);
+    return;
+  }
+
+  const links = [
+    ["Facebook", el.siteFacebook],
+    ["YouTube", el.siteYoutube],
+    ["TikTok", el.siteTiktok]
+  ];
+
+  try {
+    for (const [label, input] of links) {
+      if (input.value.trim() && !safeUrl(input.value.trim())) {
+        notify(`${label}: coloque um link válido começando por http:// ou https://.`, true);
+        input.focus();
+        return;
+      }
+    }
+
+    el.saveSettings.disabled = true;
+    el.saveSettings.textContent = "A guardar...";
+    const profileImageUrl = await uploadProfileImage();
+
+    const payload = {
+      primary_color: primaryColor,
+      profile_image_url: profileImageUrl,
+      whatsapp_number: el.whatsappNumber.value.trim(),
+      facebook_url: el.siteFacebook.value.trim(),
+      youtube_url: el.siteYoutube.value.trim(),
+      tiktok_url: el.siteTiktok.value.trim(),
+      updated_at: new Date().toISOString(),
+      updated_by: currentUser.id
+    };
+
+    const { data, error } = await db
+      .from(SETTINGS_TABLE)
+      .update(payload)
+      .eq("id", true)
+      .select("id,primary_color,profile_image_url,whatsapp_number,facebook_url,youtube_url,tiktok_url")
+      .single();
+
+    if (error) throw error;
+    siteSettings = data;
+    selectedProfileFile = null;
+    el.profileImage.value = "";
+    el.profileImageStatus.textContent = data.profile_image_url
+      ? "Configuração guardada. A foto está ativa no portal."
+      : "Nenhuma foto configurada.";
+    renderProfilePreview(data.profile_image_url);
+    renderSettingsPreview();
+    notify("Configurações do portal guardadas.");
+  } catch (error) {
+    console.error(error);
+    notify(error?.message || "Não foi possível guardar as configurações.", true);
+  } finally {
+    el.saveSettings.disabled = false;
+    el.saveSettings.textContent = "Guardar configurações";
   }
 });
 
