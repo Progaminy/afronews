@@ -175,6 +175,67 @@
       </aside>
     </div>
   </section>
+  <section class="admin-shell settings-shell">
+    <section class="panel settings-panel">
+      <div class="panel-head">
+        <span class="panel-num">03</span>
+        <div>
+          <h2>Configurações do portal</h2>
+          <p>Personalize a identidade, contactos e redes sociais do AfroNews.</p>
+        </div>
+      </div>
+
+      <form id="settingsForm" class="fields" novalidate>
+        <label class="field">
+          <span>Cor principal <b>*</b></span>
+          <input id="primaryColor" type="color" value="#f2c300" aria-label="Escolher cor principal">
+        </label>
+
+        <div class="field">
+          <span>Pré-visualização</span>
+          <div id="colorPreview" class="settings-color-preview">AfroNews</div>
+        </div>
+
+        <div class="field wide">
+          <span>Foto / logotipo da página</span>
+          <label class="upload-box settings-upload">
+            <input id="profileImage" type="file" accept="image/*">
+            <span class="upload-plus">＋</span>
+            <strong>Escolher nova foto</strong>
+            <small>Uma imagem para o cabeçalho do portal</small>
+          </label>
+          <p id="profileImageStatus" class="help">Nenhuma nova imagem selecionada.</p>
+          <div id="profilePreview" class="settings-profile-preview"></div>
+        </div>
+
+        <label class="field wide">
+          <span>Número de WhatsApp</span>
+          <input id="whatsappNumber" type="tel" inputmode="tel" placeholder="+258 72 599 084">
+          <small class="help">Pode escrever com ou sem espaços. O site criará o link do WhatsApp automaticamente.</small>
+        </label>
+
+        <label class="field wide">
+          <span>Link do Facebook</span>
+          <input id="siteFacebook" type="url" inputmode="url" placeholder="https://facebook.com/...">
+        </label>
+
+        <label class="field wide">
+          <span>Link do YouTube</span>
+          <input id="siteYoutube" type="url" inputmode="url" placeholder="https://youtube.com/@...">
+        </label>
+
+        <label class="field wide">
+          <span>Link do TikTok</span>
+          <input id="siteTiktok" type="url" inputmode="url" placeholder="https://tiktok.com/@...">
+        </label>
+
+        <div class="form-actions wide">
+          <button id="saveSettingsButton" class="primary-btn" type="submit">Guardar configurações</button>
+        </div>
+      </form>
+    </section>
+  </section>
+
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
